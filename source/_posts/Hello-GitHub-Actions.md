@@ -2,6 +2,7 @@
 ---
 title: Hello GitHub Actions：我的云端自动化部署测试
 date: 2026-03-28 16:30:00
+math: true
 tags: [CI/CD, 博客折腾, 测试]
 categories: 日常记录
 ---
