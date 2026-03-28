@@ -81,3 +81,11 @@ deploy:
   type: git
   repo: https://github.com/Auzsadong/Auzsadong.github.io.git
   branch: main
+
+fluid:
+  index:
+    banner_img: /img/home_bg.jpg
+    banner_mask_alpha: 0.3
+    slogan:
+      enable: true
+      text: "Auzsadong 的硬件开发笔记"
