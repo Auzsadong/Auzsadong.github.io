@@ -20,8 +20,7 @@ navbar:
 # 首页背景图 (Banner)
 # ----------------------------------------------------------------
 index:
-  banner_img: /img/home_bg.jpg    # 已取消注释，启用你的背景图
-  banner_mask_alpha: 0.3          # 遮罩透明度，0.3 让标题更清晰
+
   slogan: {
     enable: true,
     text: "Auzsadong 的硬件开发笔记", 
