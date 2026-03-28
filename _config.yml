@@ -1,14 +1,13 @@
 # Site - 网站基础信息
-title: Auzsadong's Blog        # 你的博客标题
-subtitle: '嵌入式开发与硬件探索' # 副标题
-description: '电子信息工程 | STM32 | FPGA | 智能硬件' # 网站描述，有利于SEO
+title: Auzsadong's Blog
+subtitle: '嵌入式开发与硬件探索'
+description: '电子信息工程 | STM32 | FPGA | 智能硬件'
 keywords: '嵌入式, 硬件, STM32, FPGA, Auzsadong'
-author: Auzsadong              # 作者名字
-language: zh-CN                # 关键：设置为中文
-timezone: 'Asia/Shanghai'      # 设置时区为上海
+author: Auzsadong
+language: zh-CN
+timezone: 'Asia/Shanghai'
 
-# URL - 线上访问地址
-# 必须设置为你 GitHub Pages 的真实地址
+# URL
 url: https://Auzsadong.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -16,7 +15,7 @@ pretty_urls:
   trailing_index: true
   trailing_html: true
 
-# Directory - 目录配置
+# Directory
 source_dir: source
 public_dir: public
 tag_dir: tags
@@ -26,7 +25,7 @@ code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
 
-# Writing - 写作配置
+# Writing
 new_post_name: :title.md
 default_layout: post
 titlecase: false
@@ -36,11 +35,17 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: true
+post_asset_folder: true  # 已开启：每篇文章都有同名资源文件夹
 relative_link: false
 future: true
 
-# 代码高亮配置 - Fluid 推荐使用 highlight.js
+# --- 新增：Markdown 解析器增强配置 ---
+# 用于解决文章资源文件夹图片路径转换问题
+marked:
+  prependRoot: true
+  postAsset: true
+
+# 代码高亮配置
 syntax_highlighter: highlight.js
 highlight:
   line_number: true
@@ -53,30 +58,25 @@ prismjs:
   line_number: true
   tab_replace: ''
 
-# Index setting - 首页文章列表
+# Index setting
 index_generator:
   path: ''
   per_page: 10
   order_by: -date
-
-# Category & Tag
-default_category: uncategorized
-category_map:
-tag_map:
 
 # Date / Time format
 date_format: YYYY-MM-DD
 time_format: HH:mm:ss
 updated_option: 'mtime'
 
-# Pagination - 分页
+# Pagination
 per_page: 10
 pagination_dir: page
 
-# Extensions - 关键：切换主题
-theme: fluid  # 已经改为 fluid
+# Extensions
+theme: fluid
 
-# Deployment - 自动部署配置
+# Deployment
 deploy:
   type: git
   repo: https://github.com/Auzsadong/Auzsadong.github.io.git
