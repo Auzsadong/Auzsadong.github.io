@@ -6,7 +6,7 @@
 favicon: /img/favicon.png
 apple_touch_icon: /img/favicon.png
 
-custom_css: [/css/custom.css]
+#custom_css: [/css/custom.css]
 
 # 顶部菜单栏配置
 navbar:
