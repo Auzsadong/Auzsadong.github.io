@@ -85,7 +85,7 @@ deploy:
 fluid:
   index:
     banner_img: /img/home_bg.jpg
-    banner_mask_alpha: 0.3
+    banner_mask_alpha: 0.1
     slogan:
       enable: true
       text: "Auzsadong 的硬件开发笔记"
