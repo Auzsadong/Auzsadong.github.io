@@ -1,0 +1,11 @@
+/* 精准定位：针对 id 为 subtitle 的元素 */
+#subtitle {
+  color: #ffffff !important;      /* 纯黑色 */
+  text-shadow: none !important;    /* 去掉白色发光阴影 */
+  font-weight: bold !important;    /* 加粗，让文字更清晰 */
+}
+
+/* 顺便把那个闪烁的打字光标也变黑，不然一个白光标在那闪很奇怪 */
+.typed-cursor {
+  color: #ffffff !important;
+}

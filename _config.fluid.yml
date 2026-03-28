@@ -6,6 +6,8 @@
 favicon: /img/favicon.png
 apple_touch_icon: /img/favicon.png
 
+custom_css: [/css/custom.css]
+
 # 顶部菜单栏配置
 navbar:
   blog_title: Auzsadong's Blog
@@ -20,7 +22,8 @@ navbar:
 # 首页背景图 (Banner)
 # ----------------------------------------------------------------
 index:
-  banner_img: /img/home_blog.jpgs
+  banner_img: /img/home_blog.jpg
+  banner_mask_alpha: 0.8
   slogan: {
     enable: true,
     text: "Auzsadong 的硬件开发笔记", 
