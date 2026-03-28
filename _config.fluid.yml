@@ -20,7 +20,7 @@ navbar:
 # 首页背景图 (Banner)
 # ----------------------------------------------------------------
 index:
-
+  banner_img: /img/home_blog.jpgs
   slogan: {
     enable: true,
     text: "Auzsadong 的硬件开发笔记", 
