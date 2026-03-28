@@ -1,0 +1,33 @@
+name: Hexo Auto Deploy
+
+on:
+  push:
+    branches:
+      - source # 只有当你向 source 分支推送源码时，才会触发自动化流水线
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # 给机器人分配一台最新的 Ubuntu Linux 服务器
+
+    steps:
+      - name: 1. 拉取最新源码
+        uses: actions/checkout@v3
+
+      - name: 2. 配置 Node.js 环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # 使用稳定的 Node.js 版本
+
+      - name: 3. 安装依赖包
+        run: npm install
+
+      - name: 4. 编译生成静态网页
+        run: npx hexo generate
+
+      - name: 5. 自动部署到 main 分支
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: main # 生成的网页覆盖推送到 main 分支
+          commit_message: "Auto-deploy via GitHub Actions"
