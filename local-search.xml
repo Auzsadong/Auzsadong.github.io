@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>常用二极管整理</title>
+    <link href="/2026/03/28/%E5%85%83%E5%99%A8%E4%BB%B6%E5%AD%98%E6%A1%A3/%E4%BA%8C%E6%9E%81%E7%AE%A1/%E4%BA%8C%E6%9E%81%E7%AE%A1/"/>
+    <url>/2026/03/28/%E5%85%83%E5%99%A8%E4%BB%B6%E5%AD%98%E6%A1%A3/%E4%BA%8C%E6%9E%81%E7%AE%A1/%E4%BA%8C%E6%9E%81%E7%AE%A1/</url>
+    
+    <content type="html"><![CDATA[<h1 id="常用二极管特性、分类及型号选型指南"><a href="#常用二极管特性、分类及型号选型指南" class="headerlink" title="常用二极管特性、分类及型号选型指南"></a>常用二极管特性、分类及型号选型指南</h1><p>二极管（Diode）是电子电路中最基础的半导体器件之一。本文旨在整理二极管的核心特性、常见分类以及在开发中高频使用的型号参数，方便查阅与选型。</p><hr><h2 id="一、-二极管的核心物理特性"><a href="#一、-二极管的核心物理特性" class="headerlink" title="一、 二极管的核心物理特性"></a>一、 二极管的核心物理特性</h2><p>在深入型号前，需掌握以下三个关键电性能参数：</p><ol><li><strong>正向压降 ($V_F$)</strong>：二极管导通时两端的电压。硅管通常为 $0.6V \sim 0.7V$，肖特基二极管约为 $0.2V \sim 0.3V$。</li><li><strong>反向重复峰值电压 ($V_{RRM}$)</strong>：二极管能承受的最大反向电压，超过此值可能导致击穿。</li><li><strong>反向恢复时间 ($t_{rr}$)</strong>：二极管从导通状态截止时所需的时间。该参数决定了二极管能工作的最高频率。</li></ol><hr><h2 id="二、-常用二极管分类及应用场景"><a href="#二、-常用二极管分类及应用场景" class="headerlink" title="二、 常用二极管分类及应用场景"></a>二、 常用二极管分类及应用场景</h2><table><thead><tr><th align="left">类别</th><th align="left">特点</th><th align="left">典型应用</th></tr></thead><tbody><tr><td align="left"><strong>整流二极管</strong></td><td align="left">耐压高、电流大、工作频率低</td><td align="left">电源整流（AC 转 DC）</td></tr><tr><td align="left"><strong>肖特基二极管 (SBD)</strong></td><td align="left">压降低、开关速度极快、反向漏电流稍大</td><td align="left">高频开关电源、续流、防反接</td></tr><tr><td align="left"><strong>稳压二极管 (Zener)</strong></td><td align="left">利用反向击穿特性稳定电压</td><td align="left">电压基准、过压保护、钳位电路</td></tr><tr><td align="left"><strong>开关二极管</strong></td><td align="left">结电容小、反应速度极快</td><td align="left">信号处理、数字逻辑电路</td></tr><tr><td align="left"><strong>快恢复二极管 (FRD)</strong></td><td align="left">反向恢复时间短，耐压较高</td><td align="left">大功率逆变器、PWM 控制</td></tr></tbody></table><hr><h2 id="三、-常用型号参数汇总"><a href="#三、-常用型号参数汇总" class="headerlink" title="三、 常用型号参数汇总"></a>三、 常用型号参数汇总</h2><p>以下是电子设计中最常见的“常青树”型号，建议博客中重点留存：</p><h3 id="1-1N4007-——-通用硅整流管"><a href="#1-1N4007-——-通用硅整流管" class="headerlink" title="1. 1N4007 —— 通用硅整流管"></a>1. 1N4007 —— 通用硅整流管</h3><p>这是最经典的整流二极管，几乎见于所有低频交流转直流的电路中。</p><ul><li><strong>最大正向电流 ($I_O$)</strong>: $1.0A$</li><li><strong>最高反向耐压 ($V_{RRM}$)</strong>: $1000V$</li><li><strong>正向压降 ($V_F$)</strong>: $1.1V$ (典型值)</li><li><strong>应用</strong>: 50Hz&#x2F;60Hz 市电整流。</li><li><img src="/image.png" alt="alt text"></li></ul><h3 id="2-1N4148-——-高速开关管"><a href="#2-1N4148-——-高速开关管" class="headerlink" title="2. 1N4148 —— 高速开关管"></a>2. 1N4148 —— 高速开关管</h3><p>玻璃封装，体积小，响应极快，处理小信号的首选。</p><ul><li><strong>反向恢复时间 ($t_{rr}$)</strong>: $4ns$</li><li><strong>最大正向电流</strong>: $200mA \sim 300mA$</li><li><strong>反向耐压</strong>: $100V$</li><li><strong>应用</strong>: 信号检测、电平转换、高频触发。</li><li><img src="/image-1.png" alt="alt text"></li></ul><h3 id="3-SS14-SS34-——-肖特基二极管-贴片"><a href="#3-SS14-SS34-——-肖特基二极管-贴片" class="headerlink" title="3. SS14 &#x2F; SS34 —— 肖特基二极管 (贴片)"></a>3. SS14 &#x2F; SS34 —— 肖特基二极管 (贴片)</h3><p>在低压电路（如 5V&#x2F;12V）中应用极广，效率高。</p><ul><li><strong>正向压降 ($V_F$)</strong>: 约 $0.5V$</li><li><strong>最大电流</strong>: $1.0A$ (SS14) &#x2F; $3.0A$ (SS34)</li><li><strong>反向耐压</strong>: $40V$</li><li><strong>应用</strong>: 电池供电防反接、DC-DC 升降压电路续流。<br><img src="/image-2.png" alt="alt text"></li></ul><h3 id="4-BZX84C5V1-——-稳压管-贴片"><a href="#4-BZX84C5V1-——-稳压管-贴片" class="headerlink" title="4. BZX84C5V1 —— 稳压管 (贴片)"></a>4. BZX84C5V1 —— 稳压管 (贴片)</h3><ul><li><strong>稳压值 ($V_Z$)</strong>: $5.1V$</li><li><strong>功率</strong>: $350mW$</li><li><strong>应用</strong>: 为单片机 IO 口提供过压保护，或产生基准电压。</li></ul><hr><h2 id="四、-选型与使用建议"><a href="#四、-选型与使用建议" class="headerlink" title="四、 选型与使用建议"></a>四、 选型与使用建议</h2><ol><li><strong>降额设计</strong>：实际工作电压建议不超过 $V_{RRM}$ 的 <strong>80%</strong>，电流不超过 $I_O$ 的 <strong>70%</strong>，以确保系统可靠性。</li><li><strong>散热考量</strong>：在大电流应用中，即使压降只有 $0.5V$，在 $3A$ 电流下也会产生 $1.5W$ 的发热量，需注意 PCB 铺铜散热。</li><li><strong>极性识别</strong>：<ul><li><strong>直插</strong>：有色环的一端为<strong>负极 (Cathode)</strong>。</li><li><strong>发光二极管 (LED)</strong>：长脚为正，短脚为负；内部大片的一端为负。</li></ul></li></ol><hr><blockquote><p><strong>本文由 AI 协作整理，转载请注明出处。</strong></p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>元器件</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>CI/CD</tag>
+      
+      <tag>硬件设计</tag>
+      
+      <tag>基础元件</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Hello GitHub Actions：我的云端自动化部署测试</title>
     <link href="/2026/03/28/%E6%97%A5%E5%B8%B8%E8%AE%B0%E5%BD%95/Hello-GitHub-Actions/"/>
     <url>/2026/03/28/%E6%97%A5%E5%B8%B8%E8%AE%B0%E5%BD%95/Hello-GitHub-Actions/</url>
