@@ -20,4 +20,4 @@ categories: 日常记录
 
 > 以后写博客，终于可以像提交代码一样优雅了：`git commit` 之后，剩下的全交给云端服务器。
 ---
-$u(t) = K_p e(t) + K_i \int_{0}^{t} e(\tau) d\tau + K_d \frac{de(t)}{dt}$）
+$$u(t) = K_p e(t) + K_i \int_{0}^{t} e(\tau) d\tau + K_d \frac{de(t)}{dt}$$
