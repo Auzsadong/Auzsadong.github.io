@@ -31,7 +31,6 @@ index:
 # 文章页配置 (包含数学公式开关)
 # ----------------------------------------------------------------
 post:
-  banner_img: /img/home_bg.jpg    # 文章页默认也用这张，你也可以换别的
   meta:
     author: { enable: true }
     date: { enable: true, format: "YYYY-MM-DD HH:mm" }
