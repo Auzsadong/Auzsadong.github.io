@@ -84,7 +84,7 @@ deploy:
 
 fluid:
   index:
-    banner_img: /img/home_bg.jpg
+    banner_img: /img/home_blog.jpg
     banner_mask_alpha: 0.1
     slogan:
       enable: true
