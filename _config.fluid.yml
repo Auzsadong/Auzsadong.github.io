@@ -1,14 +1,14 @@
 # ----------------------------------------------------------------
-# Fluid 主题专用配置文件
+# Fluid 主题专用配置文件 (Auzsadong 优化版)
 # ----------------------------------------------------------------
 
-# 浏览器标签页图标 (Favicon)
+# 浏览器标签页图标
 favicon: /img/favicon.png
 apple_touch_icon: /img/favicon.png
 
 # 顶部菜单栏配置
 navbar:
-  blog_title: Auzsadong's Blog # 页面左上角的名称
+  blog_title: Auzsadong's Blog
   menu:
     - { key: 'home', link: '/', icon: 'iconfont icon-home-fill' }
     - { key: 'archive', link: '/archives/', icon: 'iconfont icon-archive-fill' }
@@ -20,28 +20,33 @@ navbar:
 # 首页背景图 (Banner)
 # ----------------------------------------------------------------
 index:
-#  banner_img: /img/home_bg.jpg  # 这里修改首页大图路径
-#  banner_mask_alpha: 0.3        # 背景遮罩透明度 (0-1)，越大越暗
-slogan: {
+  banner_img: /img/home_bg.jpg    # 已取消注释，启用你的背景图
+  banner_mask_alpha: 0.3          # 遮罩透明度，0.3 让标题更清晰
+  slogan: {
     enable: true,
     text: "Auzsadong 的硬件开发笔记", 
   }
 
 # ----------------------------------------------------------------
-# 文章页背景图
+# 文章页配置 (包含数学公式开关)
 # ----------------------------------------------------------------
-#post:
-  #banner_img: /img/default.png  # 这里修改文章页默认大图
-  #meta:
-  #  author: { enable: true }
-  #  date: { enable: true, format: "YYYY-MM-DD HH:mm" }
+post:
+  banner_img: /img/home_bg.jpg    # 文章页默认也用这张，你也可以换别的
+  meta:
+    author: { enable: true }
+    date: { enable: true, format: "YYYY-MM-DD HH:mm" }
+  
+  # --- 重点：开启数学公式支持 ---
+  math:
+    enable: true
+    engine: mathjax               # 使用 MathJax 引擎进行渲染
 
 # ----------------------------------------------------------------
 # 代码块高亮配置
 # ----------------------------------------------------------------
 code:
-  copy_btn: true      # 显示复制按钮
+  copy_btn: true
   highlight:
     enable: true
     lib: 'highlightjs'
-    style: 'Github Gist' # 你可以换成 'Atom One Dark' 等你喜欢的风格
+    style: 'Github Gist'          # 如果你喜欢暗色，可以改为 'Atom One Dark'
