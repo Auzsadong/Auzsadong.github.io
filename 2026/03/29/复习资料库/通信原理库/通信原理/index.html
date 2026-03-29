@@ -26,15 +26,65 @@
 <meta property="og:site_name" content="Auzsadong&#39;s Blog">
 <meta property="og:description" content="今天整理文档，翻出了上学期期末复习《通信原理》时写的知识点。因为些特殊原因，信院的考题向来比较“有个性”且缺乏参考资料，我当时索性把整本书的重点全都摘录了下来。这个大工程前后花了我近一周的时间，考完试却只能躺在文件夹里吃灰。既然投入了这么多精力，只应付一场考试实在有点亏，所以决定无偿分享给小登们了。希望这份资料能帮到你们，面对通原期末考时不用再像我们当时那样束手无措。  通信原理第五章：模拟调制">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://auzsadong.github.io/img/home_bg.jpg">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/Vm6Bb8kZ6ovgj9xuTDzc0EIAnyd.jpeg">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MLHTbMMSvomm0SxxAwdctXrHnE1.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/IKaxbCt88omEtCxHRVJc0lwKnpd.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/IQCrbDiUUo5qNhxvwVHcTzWInLb.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/E9PCbVc8OoaStdxqwGVc78dOnSL.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BrsQbOzR4oYDNAx03wXcgASznAb.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/LIbNb43mLoTuLcxrxhcc96Asn7g.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/SLrxbUOYuo13XKxFNkVcxFdvnFj.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MFY0bHLwIoweDPxGFXXcQWtOneF.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GNggbQmPUoEa7txHoTrciYthnMf.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/FgiLbiO9OoAIAbxOVP1c48ljnQg.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/NywibCI4ko3Spjx0zpTceoUcnub.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/RK4dbXBRNoJNKRxlFDbcdw9dnOd.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/IIgSbIM7yoAon3x8TMycMUJ1nmb.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/UJbsbWz3KoFPRxxJpGYc69EBngc.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MayIbOABEo7q4gx9SAqciR3Tnwb.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/XPcHbOyU1oZ4XexDp90cy5rznxf.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/YhvlbM5z9oPiMwxsIxbcqK0un8g.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/I4r1bGRKioNH4wxZZ8MciGq5n8f.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/RPjebegcMoi1uBxvXHgcm67vnRh.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MayjbIsUgoMrhCx5c1hcLs4unYd.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/J9wVberD2omOEvxeekFcu403nig.jpeg">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BtRSbhy8Toy4Rlx3QiscuZpXnWd.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CjxhbnZZToflY4xExTFc7YYznhc.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/N4OXb9L1OogRRCxr5HnciJyZnjX.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/DVq4b3v6foq1IvxYBrqcY7XNnRb.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GfMQbdrW7oTGmPxnWAMcoGTJnRe.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/LIKLb8VpXoeJ1WxKaf6cIy5snbh.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GqvRbLMw2o0UXaxMUVfcR0iln8b.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/XGVgbhWEeoeypGxvcJQcIisGn9f.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/D64IbXNDsoprRYxkqr7cdOpjnLh.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/LpyxbIVq0o9xTwx1WKicYiDenn1.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KXAtby8jvofhWbxXvGkcDI2DnKe.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KYD8b006poUwNmxZ3sKc7RQZn5b.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/ZTvWb53dBoZgtxxjVIycOQQZnzf.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/F9gXbpxlxogELexE9ZHc4R1mn6f.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/YyCNbTSKno4uyexJqyecgk3Onse.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/NduBbIA10ozfDgxkzb9cqNQ1n0c.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/VBiIbR00poetzgxWdMNcrfLjnFe.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CnL2bhhcgo4fcHxe7hPcHjhunNd.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/QVQGbK0IcotZa0xZQhAcXqiEnyb.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/U0v5bfAt9oLgVUxLF7Bcc5XQnpe.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BZjib91vTojrmBx1ykdcLCkFntb.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CH5KbvjLvov0KRx8bIMcqdy4nQb.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BWMRboEPfoufdDxXII5cpVwCn1d.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GU5RbjxZEok7Bpx5PwScb6Tynsd.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CGAwbex9IoPqiCxqJEccj5y0n5g.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KKZjbFileoi7yGxAcOJcinV9nPd.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CzN3bDQlEobzKPxVlBFcbuNynlb.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KB2JbQeEBojnbExt8XCccCf8nng.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/Ku9ZbTUldocQelxpkvfcac6in5g.png">
 <meta property="article:published_time" content="2026-03-29T06:30:00.000Z">
-<meta property="article:modified_time" content="2026-03-29T06:31:55.531Z">
+<meta property="article:modified_time" content="2026-03-29T06:49:39.802Z">
 <meta property="article:author" content="Auzsadong">
 <meta property="article:tag" content="学习笔记">
 <meta property="article:tag" content="硬件开发">
 <meta property="article:tag" content="通信原理">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://auzsadong.github.io/img/home_bg.jpg">
+<meta name="twitter:image" content="https://auzsadong.github.io/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/Vm6Bb8kZ6ovgj9xuTDzc0EIAnyd.jpeg">
   
   
   
@@ -346,7 +396,7 @@
         
         
         
-          147 分钟
+          146 分钟
         
       </span>
     
@@ -416,18 +466,24 @@
 </ul>
 <h2 id="5-1-幅度调制（线性调制）"><a href="#5-1-幅度调制（线性调制）" class="headerlink" title="5.1 幅度调制（线性调制）"></a>5.1 幅度调制（线性调制）</h2><p>幅度调制是由调制信号去控制<strong>高频载波的幅度</strong>，使之随调制信号做线性变化的过程。</p>
 <h3 id="5-1-4-残留边带调制"><a href="#5-1-4-残留边带调制" class="headerlink" title="5.1.4 残留边带调制"></a>5.1.4 残留边带调制</h3><ul>
-<li>**残留边带调制（VSB）**介于双边带调制和单边带调制之间的一种折中方式，区别于 SSB 完全抑制一个 DSB 边带，VSB 逐渐切割，使其残留一小部分。<br><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/Vm6Bb8kZ6ovgj9xuTDzc0EIAnyd.jpeg" srcset="/img/loading.gif" lazyload></li>
+<li>**残留边带调制（VSB）**介于双边带调制和单边带调制之间的一种折中方式，区别于 SSB 完全抑制一个 DSB 边带，VSB 逐渐切割，使其残留一小部分。<br><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/Vm6Bb8kZ6ovgj9xuTDzc0EIAnyd.jpeg" srcset="/img/loading.gif" lazyload></li>
 <li>VSB 调制所采用的滤波器不再要求十分陡峭的截止特性，所以<strong>比单边带滤波器容易制作</strong>。</li>
 <li>VSB 的时域表达式通常比较复杂，一般表示为同相分量和正交分量的形式：</li>
-<li><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livescript">$s_&#123;VSB&#125;(t) = <span class="hljs-string">\frac&#123;1&#125;&#123;2&#125;m(t)</span> <span class="hljs-string">\cos</span> <span class="hljs-string">\omega_c</span> t <span class="hljs-string">\pm</span> <span class="hljs-string">\frac&#123;1&#125;&#123;2&#125;m&#x27;(t)</span> <span class="hljs-string">\sin</span> <span class="hljs-string">\omega_c</span> t$<br></code></pre></td></tr></table></figure></li>
+<li></li>
+</ul>
+<p>$$s_{VSB}(t) &#x3D; \frac{1}{2}m(t) \cos \omega_c t \pm \frac{1}{2}m’(t) \sin \omega_c t$$</p>
+<ul>
 <li>$m’(t)$ 是 $m(t)$ 通过一个特定滤波器后的输出。这个滤波器的特性使得部分边带被保留，部分被滤除，介于 SSB 和 DSB 之间。</li>
 <li>为了保证相干解调的输出无失真恢复调制信号，必须要求：</li>
-<li><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs livescript">$H(<span class="hljs-string">\omega</span> - <span class="hljs-string">\omega_c)</span> + H(<span class="hljs-string">\omega</span> + <span class="hljs-string">\omega_c)</span> = <span class="hljs-string">\text&#123;常数&#125;</span> <span class="hljs-string">\quad</span> (|<span class="hljs-string">\omega|</span> <span class="hljs-string">\le</span> <span class="hljs-string">\omega_H)$</span><br></code></pre></td></tr></table></figure></li>
+<li></li>
+</ul>
+<p> $$H(\omega - \omega_c) + H(\omega + \omega_c) &#x3D; \text{常数} \quad (|\omega| \le \omega_H)$$</p>
+<ul>
 <li>调制信号的最高角频率为 $\omega_H$</li>
-<li>该条件的含义是残留边带滤波器的特性在载频 $\omega_c$ 处，滤波器的幅度响应曲线关于点$(\omega_c, 0.5)$ 呈现<strong>中心对称</strong>（奇对称）。<br><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MLHTbMMSvomm0SxxAwdctXrHnE1.png" srcset="/img/loading.gif" lazyload></li>
+<li>该条件的含义是残留边带滤波器的特性在载频 $\omega_c$ 处，滤波器的幅度响应曲线关于点$(\omega_c, 0.5)$ 呈现<strong>中心对称</strong>（奇对称）。<br><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MLHTbMMSvomm0SxxAwdctXrHnE1.png" srcset="/img/loading.gif" lazyload></li>
 <li>VSB 信号解调也不能用包络检波，需要使用<strong>相干解调</strong>。</li>
 </ul>
-<h3 id="5-1-5-线性调制的一般模型"><a href="#5-1-5-线性调制的一般模型" class="headerlink" title="5.1.5 线性调制的一般模型"></a>5.1.5 线性调制的一般模型</h3><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/IKaxbCt88omEtCxHRVJc0lwKnpd.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="5-1-5-线性调制的一般模型"><a href="#5-1-5-线性调制的一般模型" class="headerlink" title="5.1.5 线性调制的一般模型"></a>5.1.5 线性调制的一般模型</h3><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/IKaxbCt88omEtCxHRVJc0lwKnpd.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="5-1-6-相干解调与包络检波"><a href="#5-1-6-相干解调与包络检波" class="headerlink" title="5.1.6 相干解调与包络检波"></a>5.1.6 相干解调与包络检波</h3><h4 id="相干解调"><a href="#相干解调" class="headerlink" title="相干解调"></a>相干解调</h4><ul>
 <li>解调与调制的实质一样，均是<strong>频谱搬移</strong>。</li>
 <li>相干解调时为了无失真的恢复原基带信号。接收端必须提供一个与已调载波<strong>严格同步（同频同相）<strong>的</strong>本地载波（称为相干载波）</strong>，与它接收的一条信号相乘后，经<strong>低通滤波器</strong>取出低频分量，即可得到原始的基带调制信号。</li>
@@ -435,15 +491,15 @@
 <li>AM 信号解调结果中还有直流分量，解调后加一个隔直电容即可。</li>
 <li></li>
 </ul>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/IQCrbDiUUo5qNhxvwVHcTzWInLb.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/IQCrbDiUUo5qNhxvwVHcTzWInLb.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="包络检波"><a href="#包络检波" class="headerlink" title="包络检波"></a>包络检波</h4><ul>
 <li>满足 $|m(t)|_{max} \le A_0$（不过调）的 AM 信号一般采用<strong>简单包络检波法</strong>恢复信号。</li>
 <li>包络检波器通常由<strong>半波或全波整流器</strong>和<strong>低通滤波器</strong>组成，属于<strong>非相干解调</strong>。</li>
 <li>包络检波器就是直接从<strong>已调波的幅度中提取原调制信号</strong>，解调输出是相干解调输出的<strong>两倍</strong>。</li>
 <li>当插入一个很强的载波（<strong>远大于信号振幅，同时要求与调制载波同频同向</strong>），使之成为近似于 AM 信号。则可以利用包络检波器恢复调制信号。这种方法称为<strong>插入载波包络检波法</strong>。他对于双边带调制（DSB），单边带调制（SSB），残留边带调制（VSB）均适用。</li>
 </ul>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/E9PCbVc8OoaStdxqwGVc78dOnSL.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="5-2-线性调制系统的抗噪声能力"><a href="#5-2-线性调制系统的抗噪声能力" class="headerlink" title="5.2 线性调制系统的抗噪声能力"></a>5.2 线性调制系统的抗噪声能力</h2><h3 id="5-2-1-分析模型"><a href="#5-2-1-分析模型" class="headerlink" title="5.2.1 分析模型"></a>5.2.1 分析模型</h3><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BrsQbOzR4oYDNAx03wXcgASznAb.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/E9PCbVc8OoaStdxqwGVc78dOnSL.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="5-2-线性调制系统的抗噪声能力"><a href="#5-2-线性调制系统的抗噪声能力" class="headerlink" title="5.2 线性调制系统的抗噪声能力"></a>5.2 线性调制系统的抗噪声能力</h2><h3 id="5-2-1-分析模型"><a href="#5-2-1-分析模型" class="headerlink" title="5.2.1 分析模型"></a>5.2.1 分析模型</h3><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BrsQbOzR4oYDNAx03wXcgASznAb.png" srcset="/img/loading.gif" lazyload></p>
 <p><strong>性能指标</strong>：<strong>制度增益 G</strong> （输出信噪比&#x2F;输入信噪比）</p>
 <p>在已调信号平均功率相同，信道噪声功率谱密度相同，<strong>输出信噪比越大越好</strong>。</p>
 <h3 id="5-2-2-DSB-调制系统的性能"><a href="#5-2-2-DSB-调制系统的性能" class="headerlink" title="5.2.2 DSB 调制系统的性能"></a>5.2.2 DSB 调制系统的性能</h3><p>$G_{DSB} &#x3D; 2$（因为输入噪声算的是 $2f_m$ 带宽，解调相干叠加使信号功率加倍）。</p>
@@ -465,14 +521,21 @@
 <li><strong>相位调制</strong>是指瞬时相位偏移，随调制信号做<strong>线性变化</strong></li>
 <li><strong>频率调制</strong>是指瞬时频率偏移，随调制信号成<strong>比例变化</strong></li>
 <li>PM 信号表达式：</li>
-<li><figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">$s_&#123;PM&#125;(<span class="hljs-built_in">t</span>) = A_c \cos[\omega_c <span class="hljs-built_in">t</span> + K_p m(<span class="hljs-built_in">t</span>)]$<br></code></pre></td></tr></table></figure></li>
-<li>FM 信号表达式：</li>
-<li><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs latex"><span class="hljs-built_in">$</span>s<span class="hljs-built_in">_</span>&#123;FM&#125;(t) = A<span class="hljs-built_in">_</span>c <span class="hljs-keyword">\cos</span><span class="hljs-keyword">\left</span>[<span class="hljs-keyword">\omega</span><span class="hljs-built_in">_</span>c t + K<span class="hljs-built_in">_</span>f <span class="hljs-keyword">\int</span><span class="hljs-built_in">_</span>&#123;-<span class="hljs-keyword">\infty</span>&#125;<span class="hljs-built_in">^</span>&#123;t&#125; m(<span class="hljs-keyword">\tau</span>) d<span class="hljs-keyword">\tau</span><span class="hljs-keyword">\right</span>]<span class="hljs-built_in">$</span><br></code></pre></td></tr></table></figure></li>
-<li>带宽：</li>
-<li><figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gams"><span class="hljs-meta"><span class="hljs-keyword">$B</span>_&#123;FM&#125; \approx 2(\Delta f + f_m) = 2f_m(m_f + 1)$</span><br></code></pre></td></tr></table></figure></li>
+<li></li>
 </ul>
+<p>$s_{PM}(t) &#x3D; A_c \cos[\omega_c t + K_p m(t)]$</p>
+<ul>
+<li>FM 信号表达式：</li>
+<li></li>
+</ul>
+<p>$s_{FM}(t) &#x3D; A_c \cos\left[\omega_c t + K_f \int_{-\infty}^{t} m(\tau) d\tau\right]$</p>
+<ul>
+<li>带宽：</li>
+<li></li>
+</ul>
+<p>$B_{FM} \approx 2(\Delta f + f_m) &#x3D; 2f_m(m_f + 1)$</p>
 <p>PM 与 FM 之间的关系</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/LIbNb43mLoTuLcxrxhcc96Asn7g.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/LIbNb43mLoTuLcxrxhcc96Asn7g.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="5-3-2-窄带调频"><a href="#5-3-2-窄带调频" class="headerlink" title="5.3.2 窄带调频"></a>5.3.2 窄带调频</h3><ul>
 <li>FM 信号频谱宽度窄时为窄带调频。</li>
 <li>$$<br>|K_f \int_{-\infty}^{t} m(\tau) d\tau|&lt;&lt;0.5<br>$$</li>
@@ -502,7 +565,7 @@
 <p>$m_f \gg 1$时$G_{FM} \approx 3m_f^3$</p>
 <p>加大调制指数 $m_f$ 可以显著提高抗噪声性能，这体现了 FM 系统“以带宽换取信噪比”的特点 。</p>
 <p><strong>门限效应</strong>：随着输入信噪比降低，当低于某个特定<strong>门限值</strong>时，输出信噪比会急剧恶化。这是非线性解调（如包络检波、鉴频器）特有的现象 。</p>
-<h2 id="5-5-各种模拟调制系统的比较"><a href="#5-5-各种模拟调制系统的比较" class="headerlink" title="5.5 各种模拟调制系统的比较"></a>5.5 各种模拟调制系统的比较</h2><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/SLrxbUOYuo13XKxFNkVcxFdvnFj.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="5-5-各种模拟调制系统的比较"><a href="#5-5-各种模拟调制系统的比较" class="headerlink" title="5.5 各种模拟调制系统的比较"></a>5.5 各种模拟调制系统的比较</h2><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/SLrxbUOYuo13XKxFNkVcxFdvnFj.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="性能排行"><a href="#性能排行" class="headerlink" title="性能排行"></a><strong>性能排行</strong></h4><ul>
 <li><strong>抗噪声性能</strong>：<strong>WBFM 最好</strong> &gt; DSB&#x2F;SSB&#x2F;VSB &gt; AM 最差 。</li>
 <li><strong>频带利用率</strong>：<strong>SSB 最高</strong> &gt; VSB &gt; DSB&#x2F;AM &gt; FM 最差 。</li>
@@ -532,12 +595,12 @@
 <li><p>（f）多电平波形</p>
 </li>
 </ol>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MFY0bHLwIoweDPxGFXXcQWtOneF.png" srcset="/img/loading.gif" lazyload></p>
-<h3 id="6-1-2-基带信号的频谱特性"><a href="#6-1-2-基带信号的频谱特性" class="headerlink" title="6.1.2 基带信号的频谱特性"></a>6.1.2 基带信号的频谱特性</h3><h4 id="稳态波-v（t）的功率谱密度："><a href="#稳态波-v（t）的功率谱密度：" class="headerlink" title="稳态波 v（t）的功率谱密度："></a>稳态波 v（t）的功率谱密度：</h4><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GNggbQmPUoEa7txHoTrciYthnMf.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/FgiLbiO9OoAIAbxOVP1c48ljnQg.png" srcset="/img/loading.gif" lazyload></p>
-<h4 id="交变波-u（t）的功率谱密度："><a href="#交变波-u（t）的功率谱密度：" class="headerlink" title="交变波 u（t）的功率谱密度："></a>交变波 u（t）的功率谱密度：</h4><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/NywibCI4ko3Spjx0zpTceoUcnub.png" srcset="/img/loading.gif" lazyload></p>
-<h4 id="s（t）-u（t）-v（t）-的功率谱密度："><a href="#s（t）-u（t）-v（t）-的功率谱密度：" class="headerlink" title="s（t） &#x3D;u（t）+v（t） 的功率谱密度："></a>s（t） &#x3D;u（t）+v（t） 的功率谱密度：</h4><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/RK4dbXBRNoJNKRxlFDbcdw9dnOd.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/IIgSbIM7yoAon3x8TMycMUJ1nmb.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MFY0bHLwIoweDPxGFXXcQWtOneF.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="6-1-2-基带信号的频谱特性"><a href="#6-1-2-基带信号的频谱特性" class="headerlink" title="6.1.2 基带信号的频谱特性"></a>6.1.2 基带信号的频谱特性</h3><h4 id="稳态波-v（t）的功率谱密度："><a href="#稳态波-v（t）的功率谱密度：" class="headerlink" title="稳态波 v（t）的功率谱密度："></a>稳态波 v（t）的功率谱密度：</h4><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GNggbQmPUoEa7txHoTrciYthnMf.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/FgiLbiO9OoAIAbxOVP1c48ljnQg.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="交变波-u（t）的功率谱密度："><a href="#交变波-u（t）的功率谱密度：" class="headerlink" title="交变波 u（t）的功率谱密度："></a>交变波 u（t）的功率谱密度：</h4><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/NywibCI4ko3Spjx0zpTceoUcnub.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="s（t）-u（t）-v（t）-的功率谱密度："><a href="#s（t）-u（t）-v（t）-的功率谱密度：" class="headerlink" title="s（t） &#x3D;u（t）+v（t） 的功率谱密度："></a>s（t） &#x3D;u（t）+v（t） 的功率谱密度：</h4><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/RK4dbXBRNoJNKRxlFDbcdw9dnOd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/IIgSbIM7yoAon3x8TMycMUJ1nmb.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="6-2-基带传输的常用码型"><a href="#6-2-基带传输的常用码型" class="headerlink" title="6.2 基带传输的常用码型"></a>6.2 基带传输的常用码型</h2><ul>
 <li>对传输用的基带信号，主要有以下两个方面要求：</li>
 </ul>
@@ -577,7 +640,7 @@
 <p>$HDB_3$编码虽然比较复杂，但解码比较简单。V 符号前面三个符号必定是 0，-1+1，还原为 1。</p>
 <h4 id="双向码"><a href="#双向码" class="headerlink" title="双向码"></a>双向码</h4><p>又称曼彻斯特码，用一个周期的正负对称方波表示 0，用其反向方波表示 1。</p>
 <p><strong>由负到正的跳变表示二进制 0，由正到负的条边表示二进制 1。</strong></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/UJbsbWz3KoFPRxxJpGYc69EBngc.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/UJbsbWz3KoFPRxxJpGYc69EBngc.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
 <li>它是一种双极性 NRZ 波形，他每个码元中心点都存在电平跳变，所以有丰富的定位信息，没有直流分量，编码简单</li>
 <li>缺点是：带宽加倍，频带利用率降低。</li>
@@ -585,7 +648,7 @@
 <h4 id="差分双向码"><a href="#差分双向码" class="headerlink" title="差分双向码"></a>差分双向码</h4><p>为了解决双向码因极性反转而引起的译码错误，可以采用差分码的概念。</p>
 <p><strong>有跳变表示二进制 1，无跳变表示二进制 0。</strong></p>
 <h4 id="CMI"><a href="#CMI" class="headerlink" title="CMI"></a>CMI</h4><p>CMI 码是传号反转码的简称，它也是一种双极性二电平码，<strong>1 使用交替的“11”“00”两位码表式，0 固定的使用“01”表示</strong>。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MayIbOABEo7q4gx9SAqciR3Tnwb.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MayIbOABEo7q4gx9SAqciR3Tnwb.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="块编码"><a href="#块编码" class="headerlink" title="块编码"></a>块编码</h4><p>nBmB 设计思想是原码流 n 位二进制码分为一组，并置换为 m 位二进制码的新码组，其中 m&gt;n。</p>
 <p>nBmT 设计思想是将 n 个二进制码变成 m 个 3 进制码且 m&lt;n。</p>
 <h2 id="6-3-数字基带信号传输与码间串扰"><a href="#6-3-数字基带信号传输与码间串扰" class="headerlink" title="6.3 数字基带信号传输与码间串扰"></a>6.3 数字基带信号传输与码间串扰</h2><p><a target="_blank" rel="noopener" href="https://ai.feishu.cn/wiki/SN93wSEkXiBSHcksaSsc0p9Rn9c#share-EWIUddTjnog0vZx65iGcdL4Yntb">划重点详细版</a></p>
@@ -599,7 +662,7 @@
 <p>眼图的眼睛张开越大，且眼图越正，表示码间串扰越小。</p>
 <p><strong>噪声越大，线条越粗，越模糊，眼睛张开越小。</strong></p>
 <p>眼图可以定性反映码间串扰的大小和噪声的大小，眼图还可以用来指示接收滤波器的调整，以减少码间串扰，改善系统性能。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/XPcHbOyU1oZ4XexDp90cy5rznxf.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/XPcHbOyU1oZ4XexDp90cy5rznxf.png" srcset="/img/loading.gif" lazyload></p>
 <ol>
 <li>最佳抽样时刻是<strong>眼睛张开最大的时刻</strong>。</li>
 <li>定时误差灵敏度是眼图斜边的斜率，<strong>斜率越大，对定位误差越敏感</strong>。</li>
@@ -623,22 +686,22 @@
 <li>利用数字信号的离散取值特点，通过开关键控载波，从而实现数字调制，这种方法称为<strong>键控法</strong>。</li>
 <li>对载波幅振、频率和相位进行键控，可获得振幅键控（ASK），频移键控（FSK）和相移键控（PSK）。</li>
 </ol>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/YhvlbM5z9oPiMwxsIxbcqK0un8g.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/YhvlbM5z9oPiMwxsIxbcqK0un8g.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="7-1-二进制数字调制原理"><a href="#7-1-二进制数字调制原理" class="headerlink" title="7.1 二进制数字调制原理"></a>7.1 二进制数字调制原理</h2><h3 id="7-1-1-二进制振幅键控"><a href="#7-1-1-二进制振幅键控" class="headerlink" title="7.1.1 二进制振幅键控"></a>7.1.1 二进制振幅键控</h3><h4 id="2ASK"><a href="#2ASK" class="headerlink" title="2ASK"></a>2ASK</h4><p>利用<strong>载波的振幅</strong>变化来传递数字信息，频率和相位保持不变。</p>
 <p>常用的二进制振幅键控方式称为<strong>通–断键控（OOK）</strong></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/I4r1bGRKioNH4wxZZ8MciGq5n8f.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/I4r1bGRKioNH4wxZZ8MciGq5n8f.png" srcset="/img/loading.gif" lazyload></p>
 <p>幅度键控信号的产生方式通常有两种：<strong>模拟调制法（相乘器法）和键控法</strong>。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/RPjebegcMoi1uBxvXHgcm67vnRh.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/RPjebegcMoi1uBxvXHgcm67vnRh.png" srcset="/img/loading.gif" lazyload></p>
 <p>2ASK&#x2F;OOK 信号也有两种基本的解调方法：<strong>非相干解调（包络检波法）和相干解调（同步检测法</strong>）。</p>
 <p>与模拟信号的接收系统相比，增加了<strong>抽样判决器</strong>，这是提高数字信号接收性能必要的。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MayjbIsUgoMrhCx5c1hcLs4unYd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/MayjbIsUgoMrhCx5c1hcLs4unYd.png" srcset="/img/loading.gif" lazyload></p>
 <p>ASK 传输技术<strong>受噪声影响很大</strong>，噪声电压和信号一起改变了振幅。这种情况下，零可能会变成 1，1 可能会变成 0。</p>
 <h4 id="2ASK-的功率谱密度"><a href="#2ASK-的功率谱密度" class="headerlink" title="2ASK 的功率谱密度"></a>2ASK 的功率谱密度</h4><p>$P_{2ASK}(f) &#x3D; \frac{1}{4} [P_s(f - f_c) + P_s(f + f_c)]$</p>
 <ul>
 <li>$P_s(f)$是单极性数字基带信号的功率谱密度。</li>
 <li>$f_c$是载波频率。</li>
 </ul>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/J9wVberD2omOEvxeekFcu403nig.jpeg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/J9wVberD2omOEvxeekFcu403nig.jpeg" srcset="/img/loading.gif" lazyload></p>
 <p><strong>传输带宽</strong>：2ASK 信号的带宽是基带信号<strong>带宽的两倍</strong>。</p>
 <p>$$<br>B_{2ASK} &#x3D; 2 f_B &#x3D; 2 R_B<br>$$</p>
 <p>$f_B$为基带信号带宽（通常取第一零点带宽）</p>
@@ -647,11 +710,11 @@
 <p><strong>时域表达式</strong>：</p>
 <p>$$<br>e_{2FSK}(t) &#x3D; s_1(t)\cos\omega_1 t + s_2(t)\cos\omega_2 t<br>$$</p>
 <p>其中 $s_1(t)$ 和 $s_2(t)$ 分别是对应于“1”和“0”的基带信号（互补关系）。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BtRSbhy8Toy4Rlx3QiscuZpXnWd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BtRSbhy8Toy4Rlx3QiscuZpXnWd.png" srcset="/img/loading.gif" lazyload></p>
 <p>2FSK 信号的产生方法也有两种。一种采用<strong>模拟调频电路</strong>来实现，另一种可以采用<strong>键控法</strong>来实现。</p>
 <p>解调同样是非相干解调和相干解调。</p>
 <p>解调原理是将 2FSK 分解为上下两路 2ASK 分别进行解调。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CjxhbnZZToflY4xExTFc7YYznhc.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CjxhbnZZToflY4xExTFc7YYznhc.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
 <li>此外 2FSK 还有其他解法，例如鉴平法，差分检测法，过零检测法。</li>
 <li>过零检测法原理在于信号在<strong>一个码元时间内的过零点数目不同而频率不同</strong>。</li>
@@ -667,13 +730,13 @@
 <p>$$<br>e_{2PSK}(t) &#x3D; s(t)\cos\omega_c t<br>$$</p>
 <p>其中 s（t） 是<strong>双极性</strong>基带信号（取值为 +1 或 -1）。</p>
 <p>当码元在“0”和“1”之间切换时，载波相位会发生 $180^\circ$ 的跳变。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/N4OXb9L1OogRRCxr5HnciJyZnjX.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/N4OXb9L1OogRRCxr5HnciJyZnjX.png" srcset="/img/loading.gif" lazyload></p>
 <p><strong>调制方法</strong>：</p>
 <ol>
 <li><strong>模拟调制法</strong>：将双极性基带信号与载波直接相乘（平衡调制）。</li>
 <li><strong>键控法</strong>：利用开关电路，根据输入数字信号选择输出相位为 0 或 $π$ 的载波。</li>
 </ol>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/DVq4b3v6foq1IvxYBrqcY7XNnRb.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/DVq4b3v6foq1IvxYBrqcY7XNnRb.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
 <li>2PSK 调通常<strong>采用相干解调法</strong>。</li>
 <li>但是由于 2PSK 信号载波恢复过程中存在 180 度的相位模糊，恢复的本地载波与所需的相干载波可能同向，也可能反向，这种相位关系的不确定将会造成解调出的数字基带信号与发送的数字基带信号正好相反。这种现象称为** 2PSK 方式的倒**$π$<strong>现象或反向工作</strong>。</li>
@@ -685,7 +748,7 @@
 <p>$$<br>B_{2PSK} &#x3D; 2f_B &#x3D; 2R_B<br>$$</p>
 <h3 id="7-1-4-二进制差分相移键控"><a href="#7-1-4-二进制差分相移键控" class="headerlink" title="7.1.4 二进制差分相移键控"></a>7.1.4 二进制差分相移键控</h3><p>为了克服 2PSK 的反向工作现象，提出了<strong>二进制差分相移键控</strong>方式（<strong>2DPSK</strong>）。</p>
 <h4 id="2DPSK"><a href="#2DPSK" class="headerlink" title="2DPSK"></a><strong>2DPSK</strong></h4><p>2DPSK 是利用前后相邻码元的载波相对相位变化传递数字信息，所以又称<strong>相对相移键控。</strong></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GfMQbdrW7oTGmPxnWAMcoGTJnRe.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GfMQbdrW7oTGmPxnWAMcoGTJnRe.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
 <li>2DPSK 信号的产生方式：</li>
 </ul>
@@ -708,17 +771,17 @@
 <p>$$<br>\textbf{2PSK} \approx \textbf{2DPSK} \approx \textbf{2ASK} \gg \textbf{2FSK}<br>$$</p>
 <p><strong>PSK， DPSK， ASK:</strong> 属于<strong>高</strong>频带利用率调制。</p>
 <p><strong>FSK:</strong> 属于<strong>低</strong>频带利用率调制（“用带宽换性能”）。</p>
-<h4 id="对信道特征变化的敏感性"><a href="#对信道特征变化的敏感性" class="headerlink" title="对信道特征变化的敏感性"></a>对信道特征变化的敏感性</h4><h4 id="各种调制的参数对比"><a href="#各种调制的参数对比" class="headerlink" title="各种调制的参数对比"></a>各种调制的参数对比</h4><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/LIKLb8VpXoeJ1WxKaf6cIy5snbh.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GqvRbLMw2o0UXaxMUVfcR0iln8b.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/XGVgbhWEeoeypGxvcJQcIisGn9f.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/D64IbXNDsoprRYxkqr7cdOpjnLh.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="对信道特征变化的敏感性"><a href="#对信道特征变化的敏感性" class="headerlink" title="对信道特征变化的敏感性"></a>对信道特征变化的敏感性</h4><h4 id="各种调制的参数对比"><a href="#各种调制的参数对比" class="headerlink" title="各种调制的参数对比"></a>各种调制的参数对比</h4><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/LIKLb8VpXoeJ1WxKaf6cIy5snbh.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GqvRbLMw2o0UXaxMUVfcR0iln8b.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/XGVgbhWEeoeypGxvcJQcIisGn9f.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/D64IbXNDsoprRYxkqr7cdOpjnLh.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="7-4-多进制数字调制原理"><a href="#7-4-多进制数字调制原理" class="headerlink" title="7.4 多进制数字调制原理"></a>7.4 多进制数字调制原理</h2><ul>
 <li>为了得到相同的误码率，与二进制系统相比，接收信号<strong>信噪比需要更大</strong>。</li>
 <li>与二进制类似，多进制键控可记作多进制幅度键控（MASK），多进制频移键控（MFSK），多进制相移键控（MPSK），多进制差分相移键控（MDPSK）。</li>
 </ul>
 <h3 id="7-4-1-多进制幅度键控（MASK）"><a href="#7-4-1-多进制幅度键控（MASK）" class="headerlink" title="7.4.1 多进制幅度键控（MASK）"></a>7.4.1 多进制幅度键控（MASK）</h3><p>多进制幅度键控，又称多电平调制，与 2ASK 相比，这种调制优点在于单位频带的信息传输速率高，<strong>频带利用率高</strong>。</p>
 <p>抑制载波 MASK 信号是<strong>振幅键控和相位键控</strong>结合的已调信号。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/LpyxbIVq0o9xTwx1WKicYiDenn1.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/LpyxbIVq0o9xTwx1WKicYiDenn1.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="7-4-2-多进制频移键控（MFSK）"><a href="#7-4-2-多进制频移键控（MFSK）" class="headerlink" title="7.4.2 多进制频移键控（MFSK）"></a>7.4.2 多进制频移键控（MFSK）</h3><p>占用带宽较宽，复杂且冷门。</p>
 <h3 id="7-4-3-多进制相移键控（MPSK）"><a href="#7-4-3-多进制相移键控（MPSK）" class="headerlink" title="7.4.3 多进制相移键控（MPSK）"></a>7.4.3 多进制相移键控（MPSK）</h3><ul>
 <li>带宽与** MASK 信号带宽相同**</li>
@@ -728,24 +791,24 @@
 </ul>
 <p>$$<br>B_{QPSK} &#x3D; R_b<br>$$</p>
 <h4 id="QPSK-调制"><a href="#QPSK-调制" class="headerlink" title="QPSK 调制"></a>QPSK 调制</h4><p>两种方法，相乘电路法，相位选择法。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KXAtby8jvofhWbxXvGkcDI2DnKe.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KYD8b006poUwNmxZ3sKc7RQZn5b.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KXAtby8jvofhWbxXvGkcDI2DnKe.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KYD8b006poUwNmxZ3sKc7RQZn5b.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="QPSK-解调"><a href="#QPSK-解调" class="headerlink" title="QPSK 解调"></a>QPSK 解调</h4><p>QPSK 信号看作两个正交 2PSK 信号的叠加</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/ZTvWb53dBoZgtxxjVIycOQQZnzf.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/ZTvWb53dBoZgtxxjVIycOQQZnzf.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="偏置-QPSK"><a href="#偏置-QPSK" class="headerlink" title="偏置 QPSK"></a>偏置 QPSK</h4><p>在 QPSK 中，相邻码元最大相差可达到 180°，引起信号包络很大的起伏，为了减小此相位突变，将两个比特量在时间上<strong>错开半个码元</strong> 使之不可能同时改变。这种体制称为<strong>偏置正交相移键控</strong>（OQPSK）。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/F9gXbpxlxogELexE9ZHc4R1mn6f.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/F9gXbpxlxogELexE9ZHc4R1mn6f.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="π-4-相移-QPSK"><a href="#π-4-相移-QPSK" class="headerlink" title="π&#x2F;4 相移 QPSK"></a>π&#x2F;4 相移 QPSK</h4><p>由两个<strong>相差</strong>$π&#x2F;4$<strong>的 QPSK 交替产生</strong>。</p>
 <p><strong>优点：</strong></p>
 <ul>
 <li>在系统中相邻码元总有相位改变，有利于在接收端<strong>提取码元同步</strong>。</li>
 <li>可采用差分检测，$π&#x2F;4$QPSK 的信息蕴藏在相邻码元间的相位差中。</li>
 </ul>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/YyCNbTSKno4uyexJqyecgk3Onse.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/YyCNbTSKno4uyexJqyecgk3Onse.png" srcset="/img/loading.gif" lazyload></p>
 <p>$$<br>B_{π&#x2F;4-QPSK} &#x3D; R_b<br>$$</p>
 <p><strong>带宽小于 OQPSK</strong></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/NduBbIA10ozfDgxkzb9cqNQ1n0c.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/NduBbIA10ozfDgxkzb9cqNQ1n0c.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="7-4-4-多进制差分相移键控（MDPSK）"><a href="#7-4-4-多进制差分相移键控（MDPSK）" class="headerlink" title="7.4.4 多进制差分相移键控（MDPSK）"></a>7.4.4 多进制差分相移键控（MDPSK）</h3><p>产生方法与 QPSK 类似，区别是先转换成相对码。</p>
-<h2 id="7-5-多进制数字调制系统的抗噪声性能"><a href="#7-5-多进制数字调制系统的抗噪声性能" class="headerlink" title="7.5 多进制数字调制系统的抗噪声性能"></a>7.5 多进制数字调制系统的抗噪声性能</h2><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/VBiIbR00poetzgxWdMNcrfLjnFe.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="7-5-多进制数字调制系统的抗噪声性能"><a href="#7-5-多进制数字调制系统的抗噪声性能" class="headerlink" title="7.5 多进制数字调制系统的抗噪声性能"></a>7.5 多进制数字调制系统的抗噪声性能</h2><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/VBiIbR00poetzgxWdMNcrfLjnFe.png" srcset="/img/loading.gif" lazyload></p>
 <h1 id="第八章：新型数字带通调制技术"><a href="#第八章：新型数字带通调制技术" class="headerlink" title="第八章：新型数字带通调制技术"></a>第八章：新型数字带通调制技术</h1><h3 id="8-2-最小频移键控和高斯频移键控"><a href="#8-2-最小频移键控和高斯频移键控" class="headerlink" title="8.2 最小频移键控和高斯频移键控"></a>8.2 最小频移键控和高斯频移键控</h3><h4 id="8-2-1-最小频移键控-MSK"><a href="#8-2-1-最小频移键控-MSK" class="headerlink" title="8.2.1 最小频移键控(MSK)"></a>8.2.1 最小频移键控(MSK)</h4><p>最小频移键控（MSK）</p>
 <p>2FSK 占用带宽比 2PSK 大频带利用率低，若用开关法产生 2FSK 信号，则相位可能不连续使信号包络产生较大起伏。为了克服上述缺点，发展出 MSK 信号。</p>
 <p>MSK 信号在时域可以表示为：</p>
@@ -767,7 +830,7 @@
 <li><strong>原理：</strong> 它利用数学上的“正交性”。当一个子载波达到波峰（采样点）时，其他所有子载波的幅度恰好为 <strong>0</strong>。</li>
 <li><strong>结果：</strong> 接收端虽看到一堆重叠的波形，但只要在特定的时间点采样，就能把它们完美分开，互不干扰。这大大提高了<strong>频谱利用率</strong>。</li>
 </ul>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CnL2bhhcgo4fcHxe7hPcHjhunNd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CnL2bhhcgo4fcHxe7hPcHjhunNd.png" srcset="/img/loading.gif" lazyload></p>
 <p>OFDM 之所以统治现代通信，是因为它完美解决了高速通信中的两个问题：</p>
 <h4 id="A-抗多径效应（Multipath-Fading）"><a href="#A-抗多径效应（Multipath-Fading）" class="headerlink" title="A. 抗多径效应（Multipath Fading）"></a>A. 抗多径效应（Multipath Fading）</h4><p>无线信号会通过墙壁反射，产生无数个“回声”。</p>
 <ul>
@@ -806,7 +869,7 @@
 <li><strong>结构特性</strong>：起伏信号的最佳接收机结构与随相信号完全一致 。</li>
 <li><strong>性能衰减</strong>：多径衰落会使性能迅速变坏。例如在 $P_e&#x3D;10^{-3}$ 时，有衰落比无衰落性能下降约 20 dB。</li>
 </ul>
-<h2 id="9-7-实际接收机和最佳接收机的性能比较"><a href="#9-7-实际接收机和最佳接收机的性能比较" class="headerlink" title="9.7 实际接收机和最佳接收机的性能比较"></a>9.7 实际接收机和最佳接收机的性能比较</h2><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/QVQGbK0IcotZa0xZQhAcXqiEnyb.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="9-7-实际接收机和最佳接收机的性能比较"><a href="#9-7-实际接收机和最佳接收机的性能比较" class="headerlink" title="9.7 实际接收机和最佳接收机的性能比较"></a>9.7 实际接收机和最佳接收机的性能比较</h2><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/QVQGbK0IcotZa0xZQhAcXqiEnyb.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="9-8-数字信号的匹配滤波接收法"><a href="#9-8-数字信号的匹配滤波接收法" class="headerlink" title="9.8 数字信号的匹配滤波接收法"></a>9.8 数字信号的匹配滤波接收法</h2><ul>
 <li>匹配滤波器是能在抽样时刻获得<strong>最大输出信噪比</strong>的线性滤波器 。</li>
 <li><strong>最大输出信噪比</strong>：$r_{omax} &#x3D; \frac{2E}{n_0}$该值只取决于信号能量和噪声功率谱密度，与波形无关 。</li>
@@ -845,15 +908,15 @@
 <h2 id="10-3-模拟脉冲调制"><a href="#10-3-模拟脉冲调制" class="headerlink" title="10.3 模拟脉冲调制"></a>10.3 模拟脉冲调制</h2><p>将周期脉冲序列看作是非正弦波。而抽样的过程可以看作用模拟信号对它进行振负调制，这种调制称为<strong>脉冲振幅调制（PAM）</strong>。</p>
 <p>将 PAM 信号的振幅变化按比例的变换成脉冲宽度的变化，可得到<strong>脉冲宽度调制（PDM）。</strong></p>
 <p>变换成脉冲相位的变化，得到<strong>脉冲位置调制（PPM）</strong></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/U0v5bfAt9oLgVUxLF7Bcc5XQnpe.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/U0v5bfAt9oLgVUxLF7Bcc5XQnpe.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="10-4-抽样信号的量化"><a href="#10-4-抽样信号的量化" class="headerlink" title="10.4 抽样信号的量化"></a>10.4 抽样信号的量化</h2><h3 id="10-4-1-量化原理"><a href="#10-4-1-量化原理" class="headerlink" title="10.4.1 量化原理"></a>10.4.1 量化原理</h3><p>模拟信号抽样后变成在时间上离散的信号，仍然是模拟信号。</p>
 <p>原理上，量化过程可以认为在一个量化器中完成。</p>
 <h3 id="10-4-2-均匀量化"><a href="#10-4-2-均匀量化" class="headerlink" title="10.4.2 均匀量化"></a>10.4.2 均匀量化</h3><p>在均匀量化中，整个信号取值范围被划分为等间距的量化间隔。</p>
 <p>量化阶距 $\Delta$ 为常数，公式为 $\Delta &#x3D; (b - a) &#x2F; M$其中 $[a, b]$ 为信号范围。</p>
 <p>量化输出电平和量化前信号抽样值一般不同，即量化输出电平有误差，这个误差称为<strong>量化噪声</strong>。</p>
 <p>用<strong>信号功率与量化噪声功率之比</strong>，衡量此误差对信号影响的大小。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BZjib91vTojrmBx1ykdcLCkFntb.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CH5KbvjLvov0KRx8bIMcqdy4nQb.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BZjib91vTojrmBx1ykdcLCkFntb.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CH5KbvjLvov0KRx8bIMcqdy4nQb.png" srcset="/img/loading.gif" lazyload></p>
 <p><strong>局限性</strong>：</p>
 <ul>
 <li><strong>信噪比不均衡</strong>：小信号时的相对误差大，信噪比低。</li>
@@ -904,8 +967,8 @@
 <ul>
 <li>分界点为：$1&#x2F;8, 2&#x2F;8, 3&#x2F;8, 4&#x2F;8, 5&#x2F;8, 6&#x2F;8, 7&#x2F;8, 1$。</li>
 </ul>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BWMRboEPfoufdDxXII5cpVwCn1d.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GU5RbjxZEok7Bpx5PwScb6Tynsd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/BWMRboEPfoufdDxXII5cpVwCn1d.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/GU5RbjxZEok7Bpx5PwScb6Tynsd.png" srcset="/img/loading.gif" lazyload></p>
 <h4 id="编码过程：如何生成-8-bit-PCM-码？"><a href="#编码过程：如何生成-8-bit-PCM-码？" class="headerlink" title="编码过程：如何生成 8-bit PCM 码？"></a>编码过程：如何生成 8-bit PCM 码？</h4><p>A 律 PCM 编码将一个模拟采样值转换为一个 <strong>8 位二进制码 (</strong>$C_1 C_2 C_3 C_4 C_5 C_6 C_7 C_8$<strong>)</strong>。</p>
 <ol>
 <li><strong>第一步：确定极性码 (</strong>$C_1$<strong>)</strong></li>
@@ -935,12 +998,12 @@
 <p>标准规定 $\mu &#x3D; 255$。</p>
 <p><strong>特点：</strong> 它在原点（0 点）附近也是对数曲线，这意味着它在<strong>极小信号</strong>处的斜率非常大，放大倍数极高。</p>
 <p>$\mu$** 律的 15 折线：** 它保留了第 0 段作为独立的、斜率最大的段。因此，$\mu$ 律对<strong>极微弱信号</strong>的分辨率比 A 律高一倍（$1&#x2F;8159$ 约等于 $1&#x2F;4096$ 的一半）。</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CGAwbex9IoPqiCxqJEccj5y0n5g.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CGAwbex9IoPqiCxqJEccj5y0n5g.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="10-5-脉冲编码调制"><a href="#10-5-脉冲编码调制" class="headerlink" title="10.5 脉冲编码调制"></a>10.5 脉冲编码调制</h2><h3 id="10-5-1-脉冲编码调制的基本原理"><a href="#10-5-1-脉冲编码调制的基本原理" class="headerlink" title="10.5.1 脉冲编码调制的基本原理"></a>10.5.1 脉冲编码调制的基本原理</h3><p>量化后的信号已经是取值离散的多电平数字信号。</p>
 <p>将模拟信号变成二进制信号的方法叫做脉冲编码调制（PCM）</p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KKZjbFileoi7yGxAcOJcinV9nPd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KKZjbFileoi7yGxAcOJcinV9nPd.png" srcset="/img/loading.gif" lazyload></p>
 <p>编码后的 PCM 信号是一个二进制数字序列，其传输方式<strong>可采用数字基带传输</strong>，也可以是<strong>对载波调制后的带通传输</strong>。</p>
-<h3 id="10-5-2-常用二进制码"><a href="#10-5-2-常用二进制码" class="headerlink" title="10.5.2 常用二进制码"></a>10.5.2 常用二进制码</h3><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CzN3bDQlEobzKPxVlBFcbuNynlb.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="10-5-2-常用二进制码"><a href="#10-5-2-常用二进制码" class="headerlink" title="10.5.2 常用二进制码"></a>10.5.2 常用二进制码</h3><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/CzN3bDQlEobzKPxVlBFcbuNynlb.png" srcset="/img/loading.gif" lazyload></p>
 <p>折叠二进制码：</p>
 <p>最高符号反向，其余<strong>上下两部分呈现映象关系</strong>，呈折叠关系。</p>
 <p><strong>优点：</strong></p>
@@ -948,8 +1011,8 @@
 <li>在用最高位表示极性后，双极性电压可以直接采用单极性编码方式处理，从而使编码电路和编码过程极大简化。</li>
 <li>折叠码另一个优点是误码对小电压的影响较小。</li>
 </ol>
-<h3 id="10-5-3-电话信号的编译码器"><a href="#10-5-3-电话信号的编译码器" class="headerlink" title="10.5.3 电话信号的编译码器"></a>10.5.3 电话信号的编译码器</h3><p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KB2JbQeEBojnbExt8XCccCf8nng.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/Ku9ZbTUldocQelxpkvfcac6in5g.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="10-5-3-电话信号的编译码器"><a href="#10-5-3-电话信号的编译码器" class="headerlink" title="10.5.3 电话信号的编译码器"></a>10.5.3 电话信号的编译码器</h3><p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/KB2JbQeEBojnbExt8XCccCf8nng.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2026/03/29/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86%E5%BA%93/%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/Ku9ZbTUldocQelxpkvfcac6in5g.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="10-5-4-PCM-系统中噪声的影响"><a href="#10-5-4-PCM-系统中噪声的影响" class="headerlink" title="10.5.4 PCM 系统中噪声的影响"></a>10.5.4 PCM 系统中噪声的影响</h3><h4 id="噪声的两种主要类型"><a href="#噪声的两种主要类型" class="headerlink" title="噪声的两种主要类型"></a>噪声的两种主要类型</h4><ul>
 <li><strong>量化噪声 (</strong>$N_q$<strong>)</strong>：由于将连续的抽样值近似为离散的量化电平而产生的误差 。它仅在发送端产生，且与信号样值的大小有关。</li>
 <li><strong>加性噪声 (</strong>$N_a$<strong>)</strong>：又称误码噪声，是由信道传输过程中的噪声引起判决错误（误码）而产生的 。</li>
