@@ -4,7 +4,8 @@ date: 2026-04-11 16:30:00
 math: true
 categories: 
   - [嵌入式开发, STM32]
-tags: [ADC, 硬件抽象层, 蓝桥杯, 笔记]
+  - [蓝桥杯]
+tags: [ADC, STM32, 蓝桥杯, 笔记]
 ---
 
 # STM32开发备忘录：ADC 模拟量采集与核心避坑指南
