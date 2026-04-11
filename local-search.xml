@@ -4,6 +4,47 @@
   
   
   <entry>
+    <title>STM32开发备忘录：定时器输入捕获与测周法计频</title>
+    <link href="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E8%AE%A1%E9%A2%91%E5%99%A8%E5%BA%93/%E8%AE%A1%E9%A2%91%E5%99%A8/"/>
+    <url>/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E8%AE%A1%E9%A2%91%E5%99%A8%E5%BA%93/%E8%AE%A1%E9%A2%91%E5%99%A8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="STM32开发备忘录：定时器输入捕获与测周法计频"><a href="#STM32开发备忘录：定时器输入捕获与测周法计频" class="headerlink" title="STM32开发备忘录：定时器输入捕获与测周法计频"></a>STM32开发备忘录：定时器输入捕获与测周法计频</h1><p>作为蓝桥杯省赛年年必考的核心模块，计频器（测量 NE555 产生的方波频率）是一个非常重要的知识点。</p><p>实现频率测量主要有两种方法：<strong>测频法</strong>（适合高频）和<strong>测周法</strong>（适合低频）。蓝桥杯板载的 NE555 产生的频率通常在几十到几万赫兹，因此本篇备忘录主要讨论<strong>测周法</strong>。</p><p><strong>测周法原理</strong>：利用 STM32 定时器的“输入捕获”功能，捕获方波的上升沿。记录两次连续上升沿出现的时间差（即一个周期的时间），进而通过 <code>频率 = 1 / 周期</code> 算出最终频率。</p><hr><h2 id="1-硬件引脚映射与分析"><a href="#1-硬件引脚映射与分析" class="headerlink" title="1. 硬件引脚映射与分析"></a>1. 硬件引脚映射与分析</h2><p>首先查看原理图，明确板载信号源的物理连接：<br><img src="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E8%AE%A1%E9%A2%91%E5%99%A8%E5%BA%93/%E8%AE%A1%E9%A2%91%E5%99%A8/image.png" alt="alt text"></p><p>以 <strong>PA15</strong> 引脚为例，查阅引脚映射可知，PA15 对应某个定时器的通道（例如 <code>TIM8_CH1</code> 或 <code>TIM2_CH1</code>，这里以 <strong>TIM8 通道 1</strong> 为例进行讲解）。</p><hr><h2 id="2-STM32CubeMX-核心配置"><a href="#2-STM32CubeMX-核心配置" class="headerlink" title="2. STM32CubeMX 核心配置"></a>2. STM32CubeMX 核心配置</h2><p>打开 CubeMX 进行底层配置：</p><ol><li><strong>设置定时器模式</strong>：打开 TIM8，将 Channel 1 设置为 <code>Input Capture direct mode</code>（直接输入捕获模式）。</li><li><strong>配置时钟参数</strong>：<ul><li><code>Prescaler</code> (预分频系数) 设为 <strong>79</strong>。因为系统主频通常为 80MHz，分频后定时器时钟为 1MHz（即 1秒钟计数 1,000,000 次，每个计数值代表 1微秒）。</li><li><code>Counter Period</code> (自动重装载值 ARR) 设为 <strong>65535</strong>（16位定时器的最大值）。<br><img src="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E8%AE%A1%E9%A2%91%E5%99%A8%E5%BA%93/%E8%AE%A1%E9%A2%91%E5%99%A8/image-1.png" alt="alt text"></li></ul></li><li><strong>开启中断 (极其重要)</strong>：<ul><li>必须打开对应的<strong>捕获中断</strong>（Capture compare interrupt）和<strong>溢出&#x2F;更新中断</strong>（Update interrupt）。</li><li><em>注：某些定时器（如 TIM3）会将更新和捕获合并成一个全局中断（Global interrupt），只需勾选那一个即可。</em><br><img src="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E8%AE%A1%E9%A2%91%E5%99%A8%E5%BA%93/%E8%AE%A1%E9%A2%91%E5%99%A8/image-3.png" alt="alt text"></li></ul></li></ol><hr><h2 id="3-核心代码编写"><a href="#3-核心代码编写" class="headerlink" title="3. 核心代码编写"></a>3. 核心代码编写</h2><p>代码的逻辑分为三步：启动捕获 -&gt; 编写溢出回调 -&gt; 编写捕获回调。</p><h3 id="3-1-启动输入捕获中断"><a href="#3-1-启动输入捕获中断" class="headerlink" title="3.1 启动输入捕获中断"></a>3.1 启动输入捕获中断</h3><p>在 <code>main.c</code> 的初始化部分（<code>/* USER CODE BEGIN 2 */</code>）启动定时器的输入捕获中断：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 启动 TIM8 通道 1 的输入捕获中断</span><br>HAL_TIM_IC_Start_IT(&amp;htim8, TIM_CHANNEL_1);<br></code></pre></td></tr></table></figure><h3 id="3-2-中断回调逻辑实现"><a href="#3-2-中断回调逻辑实现" class="headerlink" title="3.2 中断回调逻辑实现"></a>3.2 中断回调逻辑实现</h3><p>新建或在 <code>tim.c</code> 中重写以下两个弱函数：溢出回调 <code>HAL_TIM_PeriodElapsedCallback</code> 和 捕获回调 <code>HAL_TIM_IC_CaptureCallback</code>。</p><p><em>(为了代码规范与可读性，对变量命名进行了标准化优化)</em></p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* tim.c */</span><br><br><span class="hljs-comment">// 定义相关时间戳与溢出计数变量</span><br><span class="hljs-type">uint32_t</span> capture_now = <span class="hljs-number">0</span>;        <span class="hljs-comment">// 本次捕获的计数值</span><br><span class="hljs-type">uint32_t</span> capture_last = <span class="hljs-number">0</span>;       <span class="hljs-comment">// 上次捕获的计数值</span><br><span class="hljs-type">uint32_t</span> overflow_now = <span class="hljs-number">0</span>;       <span class="hljs-comment">// 本次捕获时的溢出次数</span><br><span class="hljs-type">uint32_t</span> overflow_last = <span class="hljs-number">0</span>;      <span class="hljs-comment">// 上次捕获时的溢出次数</span><br><span class="hljs-keyword">volatile</span> <span class="hljs-type">uint32_t</span> capture_period = <span class="hljs-number">0</span>; <span class="hljs-comment">// 最终计算出的周期节拍数</span><br><br><span class="hljs-comment">// 1. 溢出中断回调：处理定时器计满 65535 归零的情况</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">HAL_TIM_PeriodElapsedCallback</span><span class="hljs-params">(TIM_HandleTypeDef *htim)</span><br>&#123;<br>    <span class="hljs-keyword">if</span> (htim-&gt;Instance == TIM8)<br>    &#123;<br>        overflow_now++; <span class="hljs-comment">// 每溢出一次，计数器加一</span><br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 2. 捕获中断回调：捕获到上升沿时触发</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">HAL_TIM_IC_CaptureCallback</span><span class="hljs-params">(TIM_HandleTypeDef *htim)</span><br>&#123;<br>    <span class="hljs-keyword">if</span> (htim-&gt;Instance == TIM8)<br>    &#123;<br>        <span class="hljs-comment">// 获取当前捕获寄存器的值</span><br>        capture_now = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);<br>        <br>        <span class="hljs-comment">// 计算两次上升沿之间的总节拍数：当前差值 + 溢出次数带来的节拍补偿</span><br>        capture_period = (capture_now - capture_last) + (overflow_now - overflow_last) * <span class="hljs-number">65536</span>;<br>        <br>        <span class="hljs-comment">// 更新历史状态，为下一次捕获做准备</span><br>        capture_last = capture_now;<br>        overflow_last = overflow_now;<br>        <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><h3 id="3-3-频率计算与-LCD-显示"><a href="#3-3-频率计算与-LCD-显示" class="headerlink" title="3.3 频率计算与 LCD 显示"></a>3.3 频率计算与 LCD 显示</h3><p>在需要使用数据的地方（例如 <code>main.c</code> 的 <code>while(1)</code> 或专属的 UI 处理函数中），将周期换算为频率：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* tim.h */</span><br><span class="hljs-comment">// 别忘了在头文件中声明这个变量，以便外部调用</span><br><span class="hljs-keyword">extern</span> <span class="hljs-keyword">volatile</span> <span class="hljs-type">uint32_t</span> capture_period;<br><br><span class="hljs-comment">/* main.c / function.c */</span><br><br><span class="hljs-type">uint32_t</span> capture_freq = <span class="hljs-number">0</span>; <span class="hljs-comment">// 存放最终频率</span><br><br><span class="hljs-comment">// 前文提到定时器 1 秒计数 1M 次 (1,000,000)</span><br><span class="hljs-comment">// 用 1M 除以一个周期所占的计数值，就是 1 秒内有多少个周期（即频率 Hz）</span><br><span class="hljs-keyword">if</span> (capture_period != <span class="hljs-number">0</span>) <span class="hljs-comment">// 防止除以 0 导致硬件错误</span><br>&#123;<br>    capture_freq = <span class="hljs-number">1000000</span> / capture_period;<br>&#125;<br><br><span class="hljs-comment">// LCD 动态显示，利用 &quot;%-20s&quot; 消除旧数据残影</span><br><span class="hljs-type">char</span> LCD_DataTemp[<span class="hljs-number">30</span>];<br><span class="hljs-type">char</span> LCD_DataLine2[<span class="hljs-number">30</span>];<br><br><span class="hljs-built_in">sprintf</span>(LCD_DataTemp, <span class="hljs-string">&quot;    PWM1 = %lu Hz&quot;</span>, capture_freq);<br><span class="hljs-built_in">sprintf</span>(LCD_DataLine2, <span class="hljs-string">&quot;%-20s&quot;</span>, LCD_DataTemp);<br>LCD_DisplayStringLine(Line2, (<span class="hljs-type">uint8_t</span>*)LCD_DataLine2);<br></code></pre></td></tr></table></figure><hr><p>自此，我们就完成了一个严谨、防溢出且不闪屏的定时器计频器逻辑代码。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>蓝桥杯</category>
+      
+      <category>嵌入式开发</category>
+      
+      <category>STM32</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>蓝桥杯</tag>
+      
+      <tag>STM32</tag>
+      
+      <tag>嵌入式开发</tag>
+      
+      <tag>定时器</tag>
+      
+      <tag>输入捕获</tag>
+      
+      <tag>频率测量</tag>
+      
+      <tag>笔记</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>STM32开发备忘录：ADC采集与底层驱动指南</title>
     <link href="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ADC%E5%BA%93/ADC/"/>
     <url>/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ADC%E5%BA%93/ADC/</url>
@@ -13,9 +54,9 @@
     
     <categories>
       
-      <category>嵌入式开发</category>
-      
       <category>蓝桥杯</category>
+      
+      <category>嵌入式开发</category>
       
       <category>STM32</category>
       
@@ -24,11 +65,11 @@
     
     <tags>
       
-      <tag>ADC</tag>
+      <tag>蓝桥杯</tag>
       
       <tag>STM32</tag>
       
-      <tag>蓝桥杯</tag>
+      <tag>ADC</tag>
       
       <tag>笔记，嵌入式开发</tag>
       
@@ -55,9 +96,9 @@
     
     <tags>
       
-      <tag>STM32</tag>
-      
       <tag>蓝桥杯</tag>
+      
+      <tag>STM32</tag>
       
       <tag>LCD</tag>
       
