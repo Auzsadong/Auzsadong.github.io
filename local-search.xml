@@ -24,13 +24,19 @@
     
     <tags>
       
+      <tag>蓝桥杯</tag>
+      
+      <tag>STM32</tag>
+      
+      <tag>笔记</tag>
+      
+      <tag>嵌入式开发</tag>
+      
       <tag>USART</tag>
       
       <tag>串口通信</tag>
       
       <tag>中断</tag>
-      
-      <tag>备忘录</tag>
       
     </tags>
     
@@ -59,17 +65,17 @@
     
     <tags>
       
-      <tag>STM32</tag>
-      
       <tag>蓝桥杯</tag>
       
-      <tag>I2C</tag>
-      
-      <tag>EEPROM</tag>
+      <tag>STM32</tag>
       
       <tag>笔记</tag>
       
       <tag>嵌入式开发</tag>
+      
+      <tag>I2C</tag>
+      
+      <tag>EEPROM</tag>
       
     </tags>
     
@@ -98,17 +104,17 @@
     
     <tags>
       
-      <tag>STM32</tag>
+      <tag>PWM</tag>
+      
+      <tag>定时器</tag>
       
       <tag>蓝桥杯</tag>
+      
+      <tag>STM32</tag>
       
       <tag>笔记</tag>
       
       <tag>嵌入式开发</tag>
-      
-      <tag>PWM</tag>
-      
-      <tag>定时器</tag>
       
     </tags>
     
@@ -137,9 +143,9 @@
     
     <tags>
       
-      <tag>STM32</tag>
-      
       <tag>蓝桥杯</tag>
+      
+      <tag>STM32</tag>
       
       <tag>笔记</tag>
       
@@ -176,15 +182,15 @@
     
     <tags>
       
-      <tag>STM32</tag>
+      <tag>定时器</tag>
       
       <tag>蓝桥杯</tag>
+      
+      <tag>STM32</tag>
       
       <tag>笔记</tag>
       
       <tag>嵌入式开发</tag>
-      
-      <tag>定时器</tag>
       
       <tag>输入捕获</tag>
       
@@ -217,11 +223,11 @@
     
     <tags>
       
-      <tag>ADC</tag>
+      <tag>蓝桥杯</tag>
       
       <tag>STM32</tag>
       
-      <tag>蓝桥杯</tag>
+      <tag>ADC</tag>
       
       <tag>笔记，嵌入式开发</tag>
       
@@ -248,9 +254,9 @@
     
     <tags>
       
-      <tag>STM32</tag>
-      
       <tag>蓝桥杯</tag>
+      
+      <tag>STM32</tag>
       
       <tag>嵌入式开发</tag>
       
