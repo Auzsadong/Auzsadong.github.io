@@ -17,16 +17,18 @@
       
       <category>STM32</category>
       
+      <category>蓝桥杯</category>
+      
     </categories>
     
     
     <tags>
       
-      <tag>蓝桥杯</tag>
-      
       <tag>ADC</tag>
       
-      <tag>硬件抽象层</tag>
+      <tag>STM32</tag>
+      
+      <tag>蓝桥杯</tag>
       
       <tag>笔记</tag>
       
@@ -53,11 +55,11 @@
     
     <tags>
       
+      <tag>STM32</tag>
+      
       <tag>蓝桥杯</tag>
       
       <tag>STM32G431</tag>
-      
-      <tag>STM32</tag>
       
       <tag>LCD</tag>
       
