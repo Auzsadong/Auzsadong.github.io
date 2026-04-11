@@ -15,9 +15,9 @@
       
       <category>嵌入式开发</category>
       
-      <category>STM32</category>
-      
       <category>蓝桥杯</category>
+      
+      <category>STM32</category>
       
     </categories>
     
@@ -30,7 +30,7 @@
       
       <tag>蓝桥杯</tag>
       
-      <tag>笔记</tag>
+      <tag>笔记，嵌入式开发</tag>
       
     </tags>
     
@@ -58,8 +58,6 @@
       <tag>STM32</tag>
       
       <tag>蓝桥杯</tag>
-      
-      <tag>STM32G431</tag>
       
       <tag>LCD</tag>
       
