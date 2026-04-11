@@ -5,7 +5,7 @@ math: true
 categories: 
   - [嵌入式开发, STM32]
   - [蓝桥杯]
-tags: [ADC, STM32, 蓝桥杯, 笔记]
+tags: [ADC, STM32, 蓝桥杯, 笔记，嵌入式开发]
 ---
 
 # STM32开发备忘录：ADC 模拟量采集与核心避坑指南
