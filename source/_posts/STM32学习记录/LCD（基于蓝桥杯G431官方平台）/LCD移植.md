@@ -1,6 +1,6 @@
 
 ---
-title: 蓝桥杯嵌入式：TFT-LCD模块配置与实战指南
+title: 蓝桥杯嵌入式：TFT-LCD模块快速配置
 date: 2026-04-11 10:15:52
 math: false
 tags: [蓝桥杯, STM32G431,STM32, LCD, 嵌入式开发]
