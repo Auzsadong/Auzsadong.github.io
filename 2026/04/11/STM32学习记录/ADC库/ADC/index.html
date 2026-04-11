@@ -19,19 +19,19 @@
   <meta name="author" content="Auzsadong">
   <meta name="keywords" content="嵌入式, 硬件, STM32, FPGA, Auzsadong">
   
-    <meta name="description" content="STM32开发备忘录：ADC 模拟量采集与核心避坑指南1. 硬件引脚映射分析通过查阅开发板原理图可知，板载电位器的模拟电压输出分别连接在 PB15 和 PB12 引脚。  以 PB15 为例，查阅 STM32G431 的引脚复用表可知，它在内部连接至 ADC2 的 IN15 通道 (ADC2_IN15)。 (注：在查阅原理图时，请结合考场或项目实际给定的图纸进行二次确认。)   2. STM32C">
+    <meta name="description" content="STM32开发备忘录：ADC 模拟量采集与指南1. 硬件引脚映射分析通过查阅开发板原理图可知，板载电位器的模拟电压输出分别连接在 PB15 和 PB12 引脚。  以 PB15 为例，查阅 STM32G431 的引脚复用表可知，它在内部连接至 ADC2 的 IN15 通道 (ADC2_IN15)。 (注：在查阅原理图时，请结合考场或项目实际给定的图纸进行二次确认。)   2. STM32CubeM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="STM32开发备忘录：ADC采集与底层驱动指南">
 <meta property="og:url" content="https://auzsadong.github.io/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ADC%E5%BA%93/ADC/index.html">
 <meta property="og:site_name" content="Auzsadong&#39;s Blog">
-<meta property="og:description" content="STM32开发备忘录：ADC 模拟量采集与核心避坑指南1. 硬件引脚映射分析通过查阅开发板原理图可知，板载电位器的模拟电压输出分别连接在 PB15 和 PB12 引脚。  以 PB15 为例，查阅 STM32G431 的引脚复用表可知，它在内部连接至 ADC2 的 IN15 通道 (ADC2_IN15)。 (注：在查阅原理图时，请结合考场或项目实际给定的图纸进行二次确认。)   2. STM32C">
+<meta property="og:description" content="STM32开发备忘录：ADC 模拟量采集与指南1. 硬件引脚映射分析通过查阅开发板原理图可知，板载电位器的模拟电压输出分别连接在 PB15 和 PB12 引脚。  以 PB15 为例，查阅 STM32G431 的引脚复用表可知，它在内部连接至 ADC2 的 IN15 通道 (ADC2_IN15)。 (注：在查阅原理图时，请结合考场或项目实际给定的图纸进行二次确认。)   2. STM32CubeM">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://auzsadong.github.io/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ADC%E5%BA%93/ADC/image.png">
 <meta property="og:image" content="https://auzsadong.github.io/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ADC%E5%BA%93/ADC/image-3.png">
 <meta property="og:image" content="https://auzsadong.github.io/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ADC%E5%BA%93/ADC/image-4.png">
 <meta property="og:image" content="https://auzsadong.github.io/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ADC%E5%BA%93/ADC/image-5.png">
 <meta property="article:published_time" content="2026-04-11T08:30:00.000Z">
-<meta property="article:modified_time" content="2026-04-11T08:31:35.935Z">
+<meta property="article:modified_time" content="2026-04-11T08:48:49.932Z">
 <meta property="article:author" content="Auzsadong">
 <meta property="article:tag" content="ADC">
 <meta property="article:tag" content="STM32">
@@ -394,7 +394,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="STM32开发备忘录：ADC-模拟量采集与核心避坑指南"><a href="#STM32开发备忘录：ADC-模拟量采集与核心避坑指南" class="headerlink" title="STM32开发备忘录：ADC 模拟量采集与核心避坑指南"></a>STM32开发备忘录：ADC 模拟量采集与核心避坑指南</h1><h2 id="1-硬件引脚映射分析"><a href="#1-硬件引脚映射分析" class="headerlink" title="1. 硬件引脚映射分析"></a>1. 硬件引脚映射分析</h2><p>通过查阅开发板原理图可知，板载电位器的模拟电压输出分别连接在 <strong>PB15</strong> 和 <strong>PB12</strong> 引脚。</p>
+                <h1 id="STM32开发备忘录：ADC-模拟量采集与指南"><a href="#STM32开发备忘录：ADC-模拟量采集与指南" class="headerlink" title="STM32开发备忘录：ADC 模拟量采集与指南"></a>STM32开发备忘录：ADC 模拟量采集与指南</h1><h2 id="1-硬件引脚映射分析"><a href="#1-硬件引脚映射分析" class="headerlink" title="1. 硬件引脚映射分析"></a>1. 硬件引脚映射分析</h2><p>通过查阅开发板原理图可知，板载电位器的模拟电压输出分别连接在 <strong>PB15</strong> 和 <strong>PB12</strong> 引脚。</p>
 <ul>
 <li>以 <strong>PB15</strong> 为例，查阅 STM32G431 的引脚复用表可知，它在内部连接至 <strong>ADC2 的 IN15 通道</strong> (ADC2_IN15)。</li>
 <li><em>(注：在查阅原理图时，请结合考场或项目实际给定的图纸进行二次确认。)</em><br><img src="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/ADC%E5%BA%93/ADC/image.png" srcset="/img/loading.gif" lazyload alt="alt text"></li>
