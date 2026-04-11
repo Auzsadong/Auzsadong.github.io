@@ -26,9 +26,9 @@
 <meta property="og:site_name" content="Auzsadong&#39;s Blog">
 <meta property="og:description" content="蓝桥杯嵌入式开发：TFT-LCD 模块快速配置1. 工程准备与底层配置在开始编写 LCD 驱动代码前，必须完成以下准备工作：  导入官方底层驱动：将官方资源包中提供的 lcd.c、lcd.h 以及字库文件 fonts.h 复制并添加到你的工程目录中（注意在 Keil&#x2F;IDE 中配置好 Include Path 头文件路径）。 CubeMX 引脚配置：在 STM32CubeMX 中，根据">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://auzsadong.github.io/_posts/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/LCD%EF%BC%88%E5%9F%BA%E4%BA%8E%E8%93%9D%E6%A1%A5%E6%9D%AFG431%E5%AE%98%E6%96%B9%E5%B9%B3%E5%8F%B0%EF%BC%89/LCD%E7%A7%BB%E6%A4%8D/image.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/LCD%EF%BC%88%E5%9F%BA%E4%BA%8E%E8%93%9D%E6%A1%A5%E6%9D%AFG431%E5%AE%98%E6%96%B9%E5%B9%B3%E5%8F%B0%EF%BC%89/LCD%E7%A7%BB%E6%A4%8D/image.png">
 <meta property="article:published_time" content="2026-04-11T02:15:52.000Z">
-<meta property="article:modified_time" content="2026-04-11T06:17:46.568Z">
+<meta property="article:modified_time" content="2026-04-11T06:20:31.394Z">
 <meta property="article:author" content="Auzsadong">
 <meta property="article:tag" content="LCD">
 <meta property="article:tag" content="STM32">
@@ -36,7 +36,7 @@
 <meta property="article:tag" content="嵌入式开发">
 <meta property="article:tag" content="蓝桥杯">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://auzsadong.github.io/_posts/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/LCD%EF%BC%88%E5%9F%BA%E4%BA%8E%E8%93%9D%E6%A1%A5%E6%9D%AFG431%E5%AE%98%E6%96%B9%E5%B9%B3%E5%8F%B0%EF%BC%89/LCD%E7%A7%BB%E6%A4%8D/image.png">
+<meta name="twitter:image" content="https://auzsadong.github.io/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/LCD%EF%BC%88%E5%9F%BA%E4%BA%8E%E8%93%9D%E6%A1%A5%E6%9D%AFG431%E5%AE%98%E6%96%B9%E5%B9%B3%E5%8F%B0%EF%BC%89/LCD%E7%A7%BB%E6%A4%8D/image.png">
   
   
   
@@ -398,7 +398,7 @@
 <li><strong>导入官方底层驱动</strong>：将官方资源包中提供的 <code>lcd.c</code>、<code>lcd.h</code> 以及字库文件 <code>fonts.h</code> 复制并添加到你的工程目录中（注意在 Keil&#x2F;IDE 中配置好 Include Path 头文件路径）。</li>
 <li><strong>CubeMX 引脚配置</strong>：在 STM32CubeMX 中，根据开发板原理图配置好 LCD 所需的对应引脚配置（通常为 GPIO 推挽输出，速度设置为 High）。</li>
 </ol>
-<p><img src="/_posts/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/LCD%EF%BC%88%E5%9F%BA%E4%BA%8E%E8%93%9D%E6%A1%A5%E6%9D%AFG431%E5%AE%98%E6%96%B9%E5%B9%B3%E5%8F%B0%EF%BC%89/LCD%E7%A7%BB%E6%A4%8D/image.png" srcset="/img/loading.gif" lazyload alt="配置完成"></p>
+<p><img src="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/LCD%EF%BC%88%E5%9F%BA%E4%BA%8E%E8%93%9D%E6%A1%A5%E6%9D%AFG431%E5%AE%98%E6%96%B9%E5%B9%B3%E5%8F%B0%EF%BC%89/LCD%E7%A7%BB%E6%A4%8D/image.png" srcset="/img/loading.gif" lazyload alt="配置完成"></p>
 <hr>
 <h2 id="2-LCD-屏幕初始化"><a href="#2-LCD-屏幕初始化" class="headerlink" title="2. LCD 屏幕初始化"></a>2. LCD 屏幕初始化</h2><p>根据往年蓝桥杯赛题的常见要求，界面背景通常为黑色，字体为白色。初始化代码<strong>必须放置在 GPIO 等底层外设初始化完成之后</strong>，主循环开始之前。</p>
 <p><strong>代码示例：</strong></p>
