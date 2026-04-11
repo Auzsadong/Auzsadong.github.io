@@ -4,6 +4,41 @@
   
   
   <entry>
+    <title>STM32开发备忘录：USART串口通信与中断收发</title>
+    <link href="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA%E5%BA%93/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA/"/>
+    <url>/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA%E5%BA%93/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA/</url>
+    
+    <content type="html"><![CDATA[<h1 id="STM32开发备忘录：USART串口通信与中断收发底层实现"><a href="#STM32开发备忘录：USART串口通信与中断收发底层实现" class="headerlink" title="STM32开发备忘录：USART串口通信与中断收发底层实现"></a>STM32开发备忘录：USART串口通信与中断收发底层实现</h1><p>在嵌入式开发与调试过程中，串口通信是最基础也最重要的外设之一。通过串口打印数据，我们可以极大地便利程序运行状态的监控与 Bug 排查。</p><p>本文基于 STM32G431 平台，梳理如何利用 HAL 库实现基于**中断机制（IT）**的串口数据的收发。</p><blockquote><p><strong>🛠️ 前置准备：</strong><br>在开始编写代码前，请确保你的电脑已经正确安装了 <strong>CH340 &#x2F; CP2102 等 USB 转串口驱动</strong>，否则电脑上的串口助手将无法识别到开发板。</p></blockquote><hr><h2 id="1-STM32CubeMX-核心配置"><a href="#1-STM32CubeMX-核心配置" class="headerlink" title="1. STM32CubeMX 核心配置"></a>1. STM32CubeMX 核心配置</h2><p>打开工程，找到 <code>Connectivity</code> -&gt; <code>USART1</code>（根据开发板原理图确认，蓝桥杯板载 DAP 虚拟串口通常连接在 USART1，对应引脚 PA9 &#x2F; PA10）。</p><ol><li><strong>工作模式</strong>：将 Mode 设置为 <strong><code>Asynchronous</code> (异步收发模式)</strong>。</li><li><strong>参数设置 (Parameter Settings)</strong>：<ul><li><code>Baud Rate</code> (波特率)：默认为 <strong>115200</strong>（或 9600，需与电脑端串口助手保持绝对一致）。</li><li><code>Word Length</code> (数据位)：8 Bits。</li><li><code>Parity</code> (校验位)：None。</li><li><code>Stop Bits</code> (停止位)：1。</li></ul></li><li><strong>开启中断 (NVIC Settings)</strong>：<ul><li>必须勾选 <strong><code>USART1 global interrupt</code></strong>，否则后续代码中的 <code>_IT</code> 后缀函数将无法触发回调。<br><img src="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA%E5%BA%93/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA/image-1.png" alt="配置"></li></ul></li></ol><hr><h2 id="2-串口数据发送-Transmit"><a href="#2-串口数据发送-Transmit" class="headerlink" title="2. 串口数据发送 (Transmit)"></a>2. 串口数据发送 (Transmit)</h2><p>在 <code>main.c</code> 中，我们可以直接调用 <code>HAL_UART_Transmit_IT()</code> 函数以非阻塞的中断方式发送一串数据。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* USER CODE BEGIN 2 */</span><br><span class="hljs-comment">// 定义要发送的字符串数组</span><br><span class="hljs-type">uint8_t</span> tx_buffer[] = <span class="hljs-string">&quot;Hello World\r\n&quot;</span>;<br><br><span class="hljs-comment">// 调用中断发送函数 (非阻塞式)</span><br><span class="hljs-comment">// 参数：串口句柄，数据指针，数据长度</span><br>HAL_UART_Transmit_IT(&amp;huart1, tx_buffer, <span class="hljs-keyword">sizeof</span>(tx_buffer));<br><span class="hljs-comment">/* USER CODE END 2 */</span><br></code></pre></td></tr></table></figure><p><em>编译下载后，打开电脑端的串口助手，设置好对应的端口号和波特率，复位开发板即可看到打印信息。</em><br><img src="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA%E5%BA%93/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA/image-2.png" alt="发送成功"></p><hr><h2 id="3-串口数据接收与回显-Receive-with-Loopback"><a href="#3-串口数据接收与回显-Receive-with-Loopback" class="headerlink" title="3. 串口数据接收与回显 (Receive with Loopback)"></a>3. 串口数据接收与回显 (Receive with Loopback)</h2><p>基于中断的串口接收，核心逻辑在于：<strong>主函数启动第一次接收 -&gt; 触发中断回调 -&gt; 在回调中处理数据 -&gt; 再次启动接收。</strong></p><h3 id="3-1-启动首次接收"><a href="#3-1-启动首次接收" class="headerlink" title="3.1 启动首次接收"></a>3.1 启动首次接收</h3><p>在进入 <code>while(1)</code> 之前，必须手动触发一次接收中断，让单片机处于“待命”状态。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">volatile</span> <span class="hljs-type">uint8_t</span> rx_buffer[<span class="hljs-number">10</span>]; <span class="hljs-comment">// 定义接收缓存区 (volatile 防止被编译器优化掉)</span><br><br><span class="hljs-comment">/* USER CODE BEGIN 2 */</span><br><span class="hljs-comment">// 开启第一次中断接收，期待接收 10 个字节的数据</span><br>HAL_UART_Receive_IT(&amp;huart1, (<span class="hljs-type">uint8_t</span> *)rx_buffer, <span class="hljs-keyword">sizeof</span>(rx_buffer));<br><span class="hljs-comment">/* USER CODE END 2 */</span><br></code></pre></td></tr></table></figure><h3 id="3-2-编写中断回调函数"><a href="#3-2-编写中断回调函数" class="headerlink" title="3.2 编写中断回调函数"></a>3.2 编写中断回调函数</h3><p>当单片机接收满 10 个字节后，会自动进入硬件中断，并最终调用 <code>HAL_UART_RxCpltCallback</code> 弱函数。我们需要重写这个函数。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* USER CODE BEGIN 4 */</span><br><span class="hljs-comment">// 串口接收完成回调函数</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">HAL_UART_RxCpltCallback</span><span class="hljs-params">(UART_HandleTypeDef *huart)</span><br>&#123;<br>    <span class="hljs-comment">// 判断是否是 USART1 触发的中断</span><br>    <span class="hljs-keyword">if</span> (huart-&gt;Instance == USART1)<br>    &#123;<br>        <span class="hljs-comment">// 业务逻辑：将接收到的数据原封不动地发回去 (Echo 回显)</span><br>        HAL_UART_Transmit_IT(&amp;huart1, (<span class="hljs-type">uint8_t</span> *)rx_buffer, <span class="hljs-keyword">sizeof</span>(rx_buffer));<br>        <br>        <span class="hljs-comment">// ⚠️ 极其重要：重新“武装 (Re-arm)”接收中断</span><br>        <span class="hljs-comment">// HAL 库机制决定了每次接收完成后，中断会被关闭。必须再次调用以下函数开启下一轮接收。</span><br>        HAL_UART_Receive_IT(&amp;huart1, (<span class="hljs-type">uint8_t</span> *)rx_buffer, <span class="hljs-keyword">sizeof</span>(rx_buffer));<br>    &#125;<br>&#125;<br><span class="hljs-comment">/* USER CODE END 4 */</span><br></code></pre></td></tr></table></figure><hr><h2 id="4-⚠️-调试避坑指南与进阶预告"><a href="#4-⚠️-调试避坑指南与进阶预告" class="headerlink" title="4. ⚠️ 调试避坑指南与进阶预告"></a>4. ⚠️ 调试避坑指南与进阶预告</h2><ol><li><strong>波特率对齐</strong>：<strong>“使用串口的时候尤其要注意波特率有没有设置正确！”</strong> 电脑端串口助手、CubeMX 配置两者的波特率必须严丝合缝。出现乱码 99% 都是波特率不匹配或是晶振频率（时钟树）配置错误导致的。</li><li><strong>定长接收的局限性</strong>：上述 <code>sizeof(rx_buffer)</code> 的写法是<strong>定长接收</strong>。如果缓存区设为 10，但上位机只发了 8 个字节，单片机是不会进入回调函数的，它会一直傻等剩下的 2 个字节。</li><li><strong>进阶预告</strong>：为了解决不定长数据（比如有时候发 “OK”，有时候发 “ERROR”）的接收痛点，在更高级的工程开发中，我们会结合 <strong>DMA 数据搬运</strong> 与 <strong>串口空闲中断 (IDLE Interrupt)</strong> 来实现<strong>不定长数据收发</strong>。这部分内容将在后续篇幅中详细展开。</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>嵌入式开发</category>
+      
+      <category>蓝桥杯</category>
+      
+      <category>STM32</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>USART</tag>
+      
+      <tag>串口通信</tag>
+      
+      <tag>中断</tag>
+      
+      <tag>备忘录</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>STM32开发备忘录：EEPROM (AT24C02) 软件 I2C 读写时序与驱动</title>
     <link href="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/EEPROM(IIC)/EEPROM/"/>
     <url>/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/EEPROM(IIC)/EEPROM/</url>
@@ -24,13 +59,13 @@
     
     <tags>
       
-      <tag>I2C</tag>
-      
-      <tag>EEPROM</tag>
-      
       <tag>STM32</tag>
       
       <tag>蓝桥杯</tag>
+      
+      <tag>I2C</tag>
+      
+      <tag>EEPROM</tag>
       
       <tag>笔记</tag>
       
@@ -182,11 +217,11 @@
     
     <tags>
       
+      <tag>ADC</tag>
+      
       <tag>STM32</tag>
       
       <tag>蓝桥杯</tag>
-      
-      <tag>ADC</tag>
       
       <tag>笔记，嵌入式开发</tag>
       
