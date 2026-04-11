@@ -18,7 +18,7 @@ categories: 蓝桥杯
 1. **导入官方底层驱动**：将官方资源包中提供的 `lcd.c`、`lcd.h` 以及字库文件 `fonts.h` 复制并添加到你的工程目录中（注意在 Keil/IDE 中配置好 Include Path 头文件路径）。
 2. **CubeMX 引脚配置**：在 STM32CubeMX 中，根据开发板原理图配置好 LCD 所需的对应引脚配置（通常为 GPIO 推挽输出，速度设置为 High）。
 
-![配置完成](/_posts/STM32学习记录/LCD（基于蓝桥杯G431官方平台）/LCD移植/image.png)
+![配置完成](image.png)
 
 ---
 
