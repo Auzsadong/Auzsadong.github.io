@@ -19,7 +19,6 @@ categories: 蓝桥杯
 2. **CubeMX 引脚配置**：在 STM32CubeMX 中，根据开发板原理图配置好 LCD 所需的对应引脚配置（通常为 GPIO 推挽输出，速度设置为 High）。
 
 ![配置完成](image.png)
-
 ---
 
 ## 2. LCD 屏幕初始化
