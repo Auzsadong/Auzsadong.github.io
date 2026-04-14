@@ -1,0 +1,929 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Auzsadong">
+  <meta name="keywords" content="嵌入式, 硬件, STM32, FPGA, Auzsadong">
+  
+    <meta name="description" content="由于参加西门子杯比赛的需求，我不得不开启一段全新的 MCU 开发路程——GD32。之前很长一段时间就听说 GD32 和 STM32 高度相似，甚至在很多外设底层和代码上可以直接通用。 起初在配置开发环境的过程中，我发现绝大多数的教程使用的依然是 Keil5。但是，作为 CLion 的忠实用户，看着 Keil5 颇具年代感的界面，我决定挑战一下：用 CLion 搭建一套现代化的 GD32 开发环境。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="放弃 Keil5：基于 CLion + CMake + GCC 搭建 GD32F470 嵌入式开发环境">
+<meta property="og:url" content="https://auzsadong.github.io/2026/04/14/GD32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/CMake%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/CMake+GCC%E6%9E%B6%E6%9E%84%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Auzsadong&#39;s Blog">
+<meta property="og:description" content="由于参加西门子杯比赛的需求，我不得不开启一段全新的 MCU 开发路程——GD32。之前很长一段时间就听说 GD32 和 STM32 高度相似，甚至在很多外设底层和代码上可以直接通用。 起初在配置开发环境的过程中，我发现绝大多数的教程使用的依然是 Keil5。但是，作为 CLion 的忠实用户，看着 Keil5 颇具年代感的界面，我决定挑战一下：用 CLion 搭建一套现代化的 GD32 开发环境。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-14T15:40:00.000Z">
+<meta property="article:modified_time" content="2026-04-14T15:48:10.883Z">
+<meta property="article:author" content="Auzsadong">
+<meta property="article:tag" content="CMake">
+<meta property="article:tag" content="GCC">
+<meta property="article:tag" content="GD32">
+<meta property="article:tag" content="嵌入式开发">
+<meta property="article:tag" content="环境配置">
+<meta property="article:tag" content="西门子杯">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>放弃 Keil5：基于 CLion + CMake + GCC 搭建 GD32F470 嵌入式开发环境 - Auzsadong&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"auzsadong.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Auzsadong&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="放弃 Keil5：基于 CLion + CMake + GCC 搭建 GD32F470 嵌入式开发环境"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Auzsadong
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-04-14 23:40" pubdate>
+          2026-04-14 23:40
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          75 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">放弃 Keil5：基于 CLion + CMake + GCC 搭建 GD32F470 嵌入式开发环境</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>由于参加西门子杯比赛的需求，我不得不开启一段全新的 MCU 开发路程——GD32。之前很长一段时间就听说 GD32 和 STM32 高度相似，甚至在很多外设底层和代码上可以直接通用。</p>
+<p>起初在配置开发环境的过程中，我发现绝大多数的教程使用的依然是 Keil5。但是，作为 CLion 的忠实用户，看着 Keil5 颇具年代感的界面，我决定挑战一下：用 CLion 搭建一套现代化的 GD32 开发环境。</p>
+<p>既然它和 STM32 如此相似，我决定复用之前开发 STM32 时的经验，采用 <strong>CLion + CMake + GCC 交叉编译工具链</strong>，搭配 <strong>ST-Link + OpenOCD</strong> 的调试方案。</p>
+<p>在查阅了官方的固件库后，我发现其原始架构有些散乱。为了后续开发的高效，我结合 STM32CubeMX 的代码生成习惯，自己重新定义了一套熟悉的工程架构。</p>
+<hr>
+<h2 id="一、-工程目录架构设计"><a href="#一、-工程目录架构设计" class="headerlink" title="一、 工程目录架构设计"></a>一、 工程目录架构设计</h2><p>我的自定义工程目录结构如下，如果你经常使用 CubeMX，一定会觉得非常眼熟：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">GD32F470_Project/<br>├── build/                 # 编译输出目录 (CMake 自动生成)<br>├── cmake/                 # CMake 工具链配置目录<br>│   ├── gcc-arm-none-eabi.cmake  # GCC 交叉编译工具链配置<br>│   └── starm-clang.cmake<br>├── Core/                  # 核心业务代码<br>│   ├── Inc/               # 存放 main.h, gd32f4xx_libopt.h (外设库裁剪宏) 等<br>│   └── Src/               # 存放 main.c, gd32f4xx_it.c (中断服务函数) 等<br>├── Drivers/               # GD32 官方固件库目录<br>│   ├── CMSIS/             # 包含 core_cm4.h 等 ARM 内核头文件及 GD32F4xx 寄存器定义<br>│   └── Library/           # GD32F4xx 标准外设库和 USB 库<br>├── stlink_gd32f470.cfg    # OpenOCD 调试配置文件<br>├── GD32F470VET6_FLASH.ld  # GCC 链接脚本 (极其重要)<br>├── startup_gd32f407_427.s # 启动文件 (注意需为 GCC 版本)<br>└── CMakeLists.txt         # 项目构建脚本<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="二、-核心配置文件详解"><a href="#二、-核心配置文件详解" class="headerlink" title="二、 核心配置文件详解"></a>二、 核心配置文件详解</h2><p>搭建这套环境的核心在于让 CMake 和 GCC 能够正确识别 GD32 的固件库、芯片内存分布以及启动逻辑。以下是各个核心文件的配置详情。</p>
+<h3 id="1-CMakeLists-txt-构建脚本"><a href="#1-CMakeLists-txt-构建脚本" class="headerlink" title="1. CMakeLists.txt 构建脚本"></a>1. CMakeLists.txt 构建脚本</h3><p>这个文件负责组织整个工程的编译过程，去除了对 STM32CubeMX 的依赖，并引入了 GD32 的标准库。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><br><span class="hljs-comment"># 1. 设置项目名称</span><br><span class="hljs-keyword">set</span>(CMAKE_PROJECT_NAME GD32F470_Project)<br><span class="hljs-keyword">project</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> C ASM)<br><br><span class="hljs-comment"># 启用 clangd 编译命令导出，方便代码补全和跳转</span><br><span class="hljs-keyword">set</span>(CMAKE_EXPORT_COMPILE_COMMANDS <span class="hljs-keyword">TRUE</span>)<br><span class="hljs-keyword">set</span>(CMAKE_C_STANDARD <span class="hljs-number">11</span>)<br><br><span class="hljs-comment"># 2. 【关键】在此处提前定义目标</span><br><span class="hljs-comment"># 只有先执行了这一行，后续的 target_include_directories 才能找到挂载对象</span><br><span class="hljs-keyword">add_executable</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>)<br><br><span class="hljs-comment"># 3. 宏定义 (GD32F470 核心)</span><br><span class="hljs-keyword">target_compile_definitions</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE<br>        GD32F470<br>        USE_STDPERIPH_DRIVER<br>)<br><br><span class="hljs-comment"># 4. 包含目录 (Include Paths)</span><br><span class="hljs-keyword">target_include_directories</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE<br>        <span class="hljs-string">&quot;Core/Inc&quot;</span><br>        <span class="hljs-string">&quot;Drivers/CMSIS&quot;</span><br>        <span class="hljs-string">&quot;Drivers/CMSIS/Include&quot;</span>             <span class="hljs-comment"># 存放通用的 core_cm4.h</span><br>        <span class="hljs-string">&quot;Drivers/CMSIS/GD/GD32F4xx/Include&quot;</span><br>        <span class="hljs-string">&quot;Drivers/Library/GD32F4xx_standard_peripheral/Include&quot;</span><br>        <span class="hljs-string">&quot;Drivers/Library/GD32F4xx_usb_library/driver/Include&quot;</span><br>        <span class="hljs-string">&quot;Drivers/Library/GD32F4xx_usb_library/device/Include&quot;</span><br>        <span class="hljs-string">&quot;Drivers/Library/Third_Party&quot;</span><br>)<br><br><span class="hljs-comment"># 5. 源文件搜寻</span><br><span class="hljs-keyword">file</span>(GLOB_RECURSE CORE_SOURCES <span class="hljs-string">&quot;Core/Src/*.c&quot;</span>)<br><span class="hljs-keyword">file</span>(GLOB_RECURSE PERIPH_SOURCES <span class="hljs-string">&quot;Drivers/Library/GD32F4xx_standard_peripheral/Source/*.c&quot;</span>)<br><br><span class="hljs-comment"># 系统初始化与 GCC 版本的启动文件</span><br><span class="hljs-keyword">set</span>(STARTUP_SYSTEM_SOURCES<br>        <span class="hljs-string">&quot;Drivers/CMSIS/GD/GD32F4xx/Source/system_gd32f4xx.c&quot;</span><br>        <span class="hljs-string">&quot;startup_gd32f407_427.s&quot;</span><br>)<br><br><span class="hljs-comment"># 将搜寻到的源文件添加到目标</span><br><span class="hljs-keyword">target_sources</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE<br>        <span class="hljs-variable">$&#123;CORE_SOURCES&#125;</span><br>        <span class="hljs-variable">$&#123;PERIPH_SOURCES&#125;</span><br>        <span class="hljs-variable">$&#123;STARTUP_SYSTEM_SOURCES&#125;</span><br>)<br><br><span class="hljs-comment"># 6. 链接设置</span><br><span class="hljs-comment"># 挂载我们自定义的 GD32F470 链接脚本</span><br><span class="hljs-keyword">set</span>(LINKER_SCRIPT <span class="hljs-string">&quot;$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/GD32F470VET6_FLASH.ld&quot;</span>)<br><br><span class="hljs-keyword">target_link_options</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE<br>        -T<span class="hljs-variable">$&#123;LINKER_SCRIPT&#125;</span><br>        -Wl,-Map=<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>.map<br>        -Wl,--gc-sections<br>)<br><br><span class="hljs-keyword">target_link_libraries</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE<br>        m<br>        c<br>        nosys<br>)<br><br><span class="hljs-comment"># 7. 编译后操作：生成 Hex 和 Bin 烧录文件</span><br><span class="hljs-keyword">add_custom_command</span>(<span class="hljs-keyword">TARGET</span> <span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> POST_BUILD<br>        <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">$&#123;CMAKE_OBJCOPY&#125;</span> -O ihex $&lt;TARGET_FILE:<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>&gt; <span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>.hex<br>        <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">$&#123;CMAKE_OBJCOPY&#125;</span> -O binary $&lt;TARGET_FILE:<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>&gt; <span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>.bin<br>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-OpenOCD-调试配置-stlink-gd32f470-cfg"><a href="#2-OpenOCD-调试配置-stlink-gd32f470-cfg" class="headerlink" title="2. OpenOCD 调试配置 (stlink_gd32f470.cfg)"></a>2. OpenOCD 调试配置 (<code>stlink_gd32f470.cfg</code>)</h3><p>为了让 CLion 能够通过 ST-Link 顺利连接并调试 GD32，我们需要手写一份 cfg 文件。需要特别注意 <code>CPUTAPID</code> 的设置。</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs tcl"><span class="hljs-comment"># 选择调试器接口: ST-Link</span><br><span class="hljs-keyword">source</span> [find interface/stlink.cfg]<br><br><span class="hljs-comment"># 选择传输协议: SWD</span><br>transport select hla_swd<br><br><span class="hljs-comment"># 设置芯片的 CPUTAPID</span><br><span class="hljs-comment"># GD32F470 的 Cortex-M4 内核 ID 通常与 STM32F4 相同 (0x2ba01477)</span><br><span class="hljs-comment"># 如果 OpenOCD 报错识别不到芯片，可以尝试将其设置为 0 (强制忽略 ID 检查)</span><br><span class="hljs-keyword">set</span> CPUTAPID <span class="hljs-number">0x2ba01477</span><br><br><span class="hljs-comment"># 选择目标芯片配置文件</span><br><span class="hljs-comment"># GD32F470 的寄存器映射和调试逻辑完全兼容 STM32F4x，因此直接复用脚本</span><br><span class="hljs-keyword">source</span> [find target/stm32f4x.cfg]<br><br><span class="hljs-comment"># 设置下载速率 (可根据连接稳定性在 2000-8000 之间调整)</span><br>adapter speed <span class="hljs-number">4000</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-GCC-链接脚本-GD32F470VET6-FLASH-ld"><a href="#3-GCC-链接脚本-GD32F470VET6-FLASH-ld" class="headerlink" title="3. GCC 链接脚本 (GD32F470VET6_FLASH.ld)"></a>3. GCC 链接脚本 (<code>GD32F470VET6_FLASH.ld</code>)</h3><p>链接脚本决定了程序的代码和数据在芯片 Flash 和 RAM 中的存放位置。GD32F470VET6 拥有 <strong>512KB Flash</strong> 和 <strong>256KB RAM</strong>（其中包含 192KB 主 SRAM 和 64KB TCMSRAM）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br></pre></td><td class="code"><pre><code class="hljs ld">/* Entry Point */<br>ENTRY(Reset_Handler)<br><br>/* Specify the memory areas */<br>MEMORY<br>&#123;<br>  /* GD32F470VET6: 512KB Flash, 256KB Total RAM */<br>  /* 主 RAM (SRAM0+SRAM1+SRAM2) */<br>  RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 192K<br>  /* TCMSRAM (对应 STM32 的 CCMRAM 区域) */<br>  CCMRAM (xrw)   : ORIGIN = 0x10000000, LENGTH = 64K<br>  FLASH (rx)     : ORIGIN = 0x08000000, LENGTH = 512K<br>&#125;<br><br>/* 堆栈顶地址更新 */<br>_estack = ORIGIN(RAM) + LENGTH(RAM);<br>/* Generate a link error if heap and stack don&#x27;t fit into RAM */<br>_Min_Heap_Size = 0x200;      /* required amount of heap  */<br>_Min_Stack_Size = 0x400;     /* required amount of stack */<br><br>/* Define output sections */<br>SECTIONS<br>&#123;<br>  /* The startup code goes first into FLASH */<br>  .isr_vector :<br>  &#123;<br>    . = ALIGN(4);<br>    KEEP(*(.isr_vector)) /* Startup code */<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  /* The program code and other data goes into FLASH */<br>  .text :<br>  &#123;<br>    . = ALIGN(4);<br>    *(.text)           /* .text sections (code) */<br>    *(.text*)          /* .text* sections (code) */<br>    *(.glue_7)         /* glue arm to thumb code */<br>    *(.glue_7t)        /* glue thumb to arm code */<br>    *(.eh_frame)<br><br>    KEEP (*(.init))<br>    KEEP (*(.fini))<br><br>    . = ALIGN(4);<br>    _etext = .;        /* define a global symbols at end of code */<br>  &#125; &gt;FLASH<br><br>  /* Constant data goes into FLASH */<br>  .rodata :<br>  &#123;<br>    . = ALIGN(4);<br>    *(.rodata)         /* .rodata sections (constants, strings, etc.) */<br>    *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  .ARM.extab (READONLY) : <br>  &#123;<br>    . = ALIGN(4);<br>    *(.ARM.extab* .gnu.linkonce.armextab.*)<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  .ARM (READONLY) : <br>  &#123;<br>    . = ALIGN(4);<br>    __exidx_start = .;<br>    *(.ARM.exidx*)<br>    __exidx_end = .;<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  .preinit_array (READONLY) : <br>  &#123;<br>    . = ALIGN(4);<br>    PROVIDE_HIDDEN (__preinit_array_start = .);<br>    KEEP (*(.preinit_array*))<br>    PROVIDE_HIDDEN (__preinit_array_end = .);<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  .init_array (READONLY) : <br>  &#123;<br>    . = ALIGN(4);<br>    PROVIDE_HIDDEN (__init_array_start = .);<br>    KEEP (*(SORT(.init_array.*)))<br>    KEEP (*(.init_array*))<br>    PROVIDE_HIDDEN (__init_array_end = .);<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  .fini_array (READONLY) : <br>  &#123;<br>    . = ALIGN(4);<br>    PROVIDE_HIDDEN (__fini_array_start = .);<br>    KEEP (*(SORT(.fini_array.*)))<br>    KEEP (*(.fini_array*))<br>    PROVIDE_HIDDEN (__fini_array_end = .);<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  _siccmram = LOADADDR(.ccmram);<br><br>  .ccmram :<br>  &#123;<br>    . = ALIGN(4);<br>    _sccmram = .;       /* create a global symbol at ccmram start */<br>    *(.ccmram)<br>    *(.ccmram*)<br>    . = ALIGN(4);<br>    _eccmram = .;       /* create a global symbol at ccmram end */<br>  &#125; &gt;CCMRAM AT&gt; FLASH<br><br>  _sidata = LOADADDR(.data);<br><br>  .data :<br>  &#123;<br>    . = ALIGN(4);<br>    _sdata = .;        /* create a global symbol at data start */<br>    *(.data)           /* .data sections */<br>    *(.data*)          /* .data* sections */<br>    *(.RamFunc)        /* .RamFunc sections */<br>    *(.RamFunc*)       /* .RamFunc* sections */<br>    . = ALIGN(4);<br>  &#125; &gt;RAM AT&gt; FLASH<br><br>  .tdata : ALIGN(4)<br>  &#123;<br>    *(.tdata .tdata.* .gnu.linkonce.td.*)<br>    . = ALIGN(4);<br>    _edata = .;        <br>    PROVIDE(__data_end = .);<br>    PROVIDE(__tdata_end = .);<br>  &#125; &gt;RAM AT&gt; FLASH<br><br>  PROVIDE( __tdata_start = ADDR(.tdata) );<br>  PROVIDE( __tdata_size = __tdata_end - __tdata_start );<br>  PROVIDE( __data_start = ADDR(.data) );<br>  PROVIDE( __data_size = __data_end - __data_start );<br>  PROVIDE( __tdata_source = LOADADDR(.tdata) );<br>  PROVIDE( __tdata_source_end = LOADADDR(.tdata) + SIZEOF(.tdata) );<br>  PROVIDE( __tdata_source_size = __tdata_source_end - __tdata_source );<br>  PROVIDE( __data_source = LOADADDR(.data) );<br>  PROVIDE( __data_source_end = __tdata_source_end );<br>  PROVIDE( __data_source_size = __data_source_end - __data_source );<br><br>  .tbss (NOLOAD) : ALIGN(4)<br>  &#123;<br>    _sbss = .;         <br>    __bss_start__ = _sbss;<br>    *(.tbss .tbss.*)<br>    . = ALIGN(4);<br>    PROVIDE( __tbss_end = . );<br>  &#125; &gt;RAM<br><br>  PROVIDE( __tbss_start = ADDR(.tbss) );<br>  PROVIDE( __tbss_size = __tbss_end - __tbss_start );<br>  PROVIDE( __tbss_offset = ADDR(.tbss) - ADDR(.tdata) );<br>  PROVIDE( __tls_base = __tdata_start );<br>  PROVIDE( __tls_end = __tbss_end );<br>  PROVIDE( __tls_size = __tls_end - __tls_base );<br>  PROVIDE( __tls_align = MAX(ALIGNOF(.tdata), ALIGNOF(.tbss)) );<br>  PROVIDE( __tls_size_align = (__tls_size + __tls_align - 1) &amp; ~(__tls_align - 1) );<br>  PROVIDE( __arm32_tls_tcb_offset = MAX(8, __tls_align) );<br>  PROVIDE( __arm64_tls_tcb_offset = MAX(16, __tls_align) );<br><br>  .bss (NOLOAD) : ALIGN(4)<br>  &#123;<br>    *(.bss)<br>    *(.bss*)<br>    *(COMMON)<br>    . = ALIGN(4);<br>    _ebss = .;         <br>    __bss_end__ = _ebss;<br>    PROVIDE( __bss_end = .);<br>  &#125; &gt;RAM<br>  <br>  PROVIDE( __non_tls_bss_start = ADDR(.bss) );<br>  PROVIDE( __bss_start = __tbss_start );<br>  PROVIDE( __bss_size = __bss_end - __bss_start );<br><br>  ._user_heap_stack (NOLOAD) :<br>  &#123;<br>    . = ALIGN(8);<br>    PROVIDE ( end = . );<br>    PROVIDE ( _end = . );<br>    . = . + _Min_Heap_Size;<br>    . = . + _Min_Stack_Size;<br>    . = ALIGN(8);<br>  &#125; &gt;RAM<br><br>  /DISCARD/ :<br>  &#123;<br>    libc.a:* ( * )<br>    libm.a:* ( * )<br>    libgcc.a:* ( * )<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、启动文件与链接脚本的对齐"><a href="#三、启动文件与链接脚本的对齐" class="headerlink" title="三、启动文件与链接脚本的对齐"></a>三、启动文件与链接脚本的对齐</h2><p>在这里必须着重记录一个巨大的坑。</p>
+<p>GD32 官方固件库提供的 GCC 版 <code>startup_gd32f407_427.s</code> 启动文件，其默认的宏命名与上文配置的 <code>.ld</code> 链接脚本存在差异。如果不统一，会导致编译出的固件丢失中断向量表，单片机一上电 CPU 指针就会跑飞（卡死在无数个 <code>movs r0, r0</code> 空指令中）。</p>
+<p><strong>我们需要在 <code>.s</code> 启动文件中修改两个地方：</strong></p>
+<ol>
+<li>向量表存放的<strong>段名</strong>没对上（链接器找不到位置）。</li>
+<li><strong>栈顶指针变量名</strong>没对上（导致上电后 MSP 错误）。</li>
+</ol>
+<p>在 <code>startup_gd32f407_427.s</code> 文件中找到定义中断向量表的位置进行修改：</p>
+<p><strong>❌ 官方默认的错误代码：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.section  .vectors,&quot;a&quot;,%progbits       /* ❌ 错误 1：段名不对，链接脚本中叫 .isr_vector */<br>   .global __gVectors<br><br>__gVectors:<br>                    .word _sp             /* ❌ 错误 2：栈顶指针不对，链接脚本中叫 _estack */<br>                    .word Reset_Handler   /* Reset Handler */<br></code></pre></td></tr></table></figure>
+
+<p><strong>✅ 修正后的正确代码：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.section  .isr_vector,&quot;a&quot;,%progbits    /* ✅ 修正：改为与 ld 脚本一致的 .isr_vector */<br>   .global __gVectors<br><br>__gVectors:<br>                    .word _estack         /* ✅ 修正：改为与 ld 脚本一致的 _estack */<br>                    .word Reset_Handler   /* Reset Handler */<br></code></pre></td></tr></table></figure>
+
+<p>修改完毕后，清理 CMake 缓存并重新编译下载，代码终于稳稳地跳进了 <code>main()</code> 函数，LED 成功闪烁了起来！</p>
+<p>自此，GD32F470 的现代版 CLion 开发环境全部配置完成！</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/" class="category-chain-item">嵌入式开发</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/GD32/" class="category-chain-item">GD32</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/GD32/%E8%A5%BF%E9%97%A8%E5%AD%90%E6%9D%AF/" class="category-chain-item">西门子杯</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/GD32/" class="print-no-link">#GD32</a>
+      
+        <a href="/tags/%E8%A5%BF%E9%97%A8%E5%AD%90%E6%9D%AF/" class="print-no-link">#西门子杯</a>
+      
+        <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" class="print-no-link">#环境配置</a>
+      
+        <a href="/tags/GCC/" class="print-no-link">#GCC</a>
+      
+        <a href="/tags/CMake/" class="print-no-link">#CMake</a>
+      
+        <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/" class="print-no-link">#嵌入式开发</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>放弃 Keil5：基于 CLion + CMake + GCC 搭建 GD32F470 嵌入式开发环境</div>
+      <div>https://auzsadong.github.io/2026/04/14/GD32学习记录/CMake环境搭建/CMake+GCC架构搭建/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Auzsadong</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年4月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA%E5%BA%93/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA/" title="STM32开发备忘录：USART串口通信与中断收发">
+                        <span class="hidden-mobile">STM32开发备忘录：USART串口通信与中断收发</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

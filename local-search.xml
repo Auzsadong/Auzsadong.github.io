@@ -4,6 +4,45 @@
   
   
   <entry>
+    <title>放弃 Keil5：基于 CLion + CMake + GCC 搭建 GD32F470 嵌入式开发环境</title>
+    <link href="/2026/04/14/GD32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/CMake%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/CMake+GCC%E6%9E%B6%E6%9E%84%E6%90%AD%E5%BB%BA/"/>
+    <url>/2026/04/14/GD32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/CMake%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/CMake+GCC%E6%9E%B6%E6%9E%84%E6%90%AD%E5%BB%BA/</url>
+    
+    <content type="html"><![CDATA[<p>由于参加西门子杯比赛的需求，我不得不开启一段全新的 MCU 开发路程——GD32。之前很长一段时间就听说 GD32 和 STM32 高度相似，甚至在很多外设底层和代码上可以直接通用。</p><p>起初在配置开发环境的过程中，我发现绝大多数的教程使用的依然是 Keil5。但是，作为 CLion 的忠实用户，看着 Keil5 颇具年代感的界面，我决定挑战一下：用 CLion 搭建一套现代化的 GD32 开发环境。</p><p>既然它和 STM32 如此相似，我决定复用之前开发 STM32 时的经验，采用 <strong>CLion + CMake + GCC 交叉编译工具链</strong>，搭配 <strong>ST-Link + OpenOCD</strong> 的调试方案。</p><p>在查阅了官方的固件库后，我发现其原始架构有些散乱。为了后续开发的高效，我结合 STM32CubeMX 的代码生成习惯，自己重新定义了一套熟悉的工程架构。</p><hr><h2 id="一、-工程目录架构设计"><a href="#一、-工程目录架构设计" class="headerlink" title="一、 工程目录架构设计"></a>一、 工程目录架构设计</h2><p>我的自定义工程目录结构如下，如果你经常使用 CubeMX，一定会觉得非常眼熟：</p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs text">GD32F470_Project/<br>├── build/                 # 编译输出目录 (CMake 自动生成)<br>├── cmake/                 # CMake 工具链配置目录<br>│   ├── gcc-arm-none-eabi.cmake  # GCC 交叉编译工具链配置<br>│   └── starm-clang.cmake<br>├── Core/                  # 核心业务代码<br>│   ├── Inc/               # 存放 main.h, gd32f4xx_libopt.h (外设库裁剪宏) 等<br>│   └── Src/               # 存放 main.c, gd32f4xx_it.c (中断服务函数) 等<br>├── Drivers/               # GD32 官方固件库目录<br>│   ├── CMSIS/             # 包含 core_cm4.h 等 ARM 内核头文件及 GD32F4xx 寄存器定义<br>│   └── Library/           # GD32F4xx 标准外设库和 USB 库<br>├── stlink_gd32f470.cfg    # OpenOCD 调试配置文件<br>├── GD32F470VET6_FLASH.ld  # GCC 链接脚本 (极其重要)<br>├── startup_gd32f407_427.s # 启动文件 (注意需为 GCC 版本)<br>└── CMakeLists.txt         # 项目构建脚本<br></code></pre></td></tr></table></figure><hr><h2 id="二、-核心配置文件详解"><a href="#二、-核心配置文件详解" class="headerlink" title="二、 核心配置文件详解"></a>二、 核心配置文件详解</h2><p>搭建这套环境的核心在于让 CMake 和 GCC 能够正确识别 GD32 的固件库、芯片内存分布以及启动逻辑。以下是各个核心文件的配置详情。</p><h3 id="1-CMakeLists-txt-构建脚本"><a href="#1-CMakeLists-txt-构建脚本" class="headerlink" title="1. CMakeLists.txt 构建脚本"></a>1. CMakeLists.txt 构建脚本</h3><p>这个文件负责组织整个工程的编译过程，去除了对 STM32CubeMX 的依赖，并引入了 GD32 的标准库。</p><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><code class="hljs cmake"><span class="hljs-keyword">cmake_minimum_required</span>(VERSION <span class="hljs-number">3.22</span>)<br><br><span class="hljs-comment"># 1. 设置项目名称</span><br><span class="hljs-keyword">set</span>(CMAKE_PROJECT_NAME GD32F470_Project)<br><span class="hljs-keyword">project</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> C ASM)<br><br><span class="hljs-comment"># 启用 clangd 编译命令导出，方便代码补全和跳转</span><br><span class="hljs-keyword">set</span>(CMAKE_EXPORT_COMPILE_COMMANDS <span class="hljs-keyword">TRUE</span>)<br><span class="hljs-keyword">set</span>(CMAKE_C_STANDARD <span class="hljs-number">11</span>)<br><br><span class="hljs-comment"># 2. 【关键】在此处提前定义目标</span><br><span class="hljs-comment"># 只有先执行了这一行，后续的 target_include_directories 才能找到挂载对象</span><br><span class="hljs-keyword">add_executable</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>)<br><br><span class="hljs-comment"># 3. 宏定义 (GD32F470 核心)</span><br><span class="hljs-keyword">target_compile_definitions</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE<br>        GD32F470<br>        USE_STDPERIPH_DRIVER<br>)<br><br><span class="hljs-comment"># 4. 包含目录 (Include Paths)</span><br><span class="hljs-keyword">target_include_directories</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE<br>        <span class="hljs-string">&quot;Core/Inc&quot;</span><br>        <span class="hljs-string">&quot;Drivers/CMSIS&quot;</span><br>        <span class="hljs-string">&quot;Drivers/CMSIS/Include&quot;</span>             <span class="hljs-comment"># 存放通用的 core_cm4.h</span><br>        <span class="hljs-string">&quot;Drivers/CMSIS/GD/GD32F4xx/Include&quot;</span><br>        <span class="hljs-string">&quot;Drivers/Library/GD32F4xx_standard_peripheral/Include&quot;</span><br>        <span class="hljs-string">&quot;Drivers/Library/GD32F4xx_usb_library/driver/Include&quot;</span><br>        <span class="hljs-string">&quot;Drivers/Library/GD32F4xx_usb_library/device/Include&quot;</span><br>        <span class="hljs-string">&quot;Drivers/Library/Third_Party&quot;</span><br>)<br><br><span class="hljs-comment"># 5. 源文件搜寻</span><br><span class="hljs-keyword">file</span>(GLOB_RECURSE CORE_SOURCES <span class="hljs-string">&quot;Core/Src/*.c&quot;</span>)<br><span class="hljs-keyword">file</span>(GLOB_RECURSE PERIPH_SOURCES <span class="hljs-string">&quot;Drivers/Library/GD32F4xx_standard_peripheral/Source/*.c&quot;</span>)<br><br><span class="hljs-comment"># 系统初始化与 GCC 版本的启动文件</span><br><span class="hljs-keyword">set</span>(STARTUP_SYSTEM_SOURCES<br>        <span class="hljs-string">&quot;Drivers/CMSIS/GD/GD32F4xx/Source/system_gd32f4xx.c&quot;</span><br>        <span class="hljs-string">&quot;startup_gd32f407_427.s&quot;</span><br>)<br><br><span class="hljs-comment"># 将搜寻到的源文件添加到目标</span><br><span class="hljs-keyword">target_sources</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE<br>        <span class="hljs-variable">$&#123;CORE_SOURCES&#125;</span><br>        <span class="hljs-variable">$&#123;PERIPH_SOURCES&#125;</span><br>        <span class="hljs-variable">$&#123;STARTUP_SYSTEM_SOURCES&#125;</span><br>)<br><br><span class="hljs-comment"># 6. 链接设置</span><br><span class="hljs-comment"># 挂载我们自定义的 GD32F470 链接脚本</span><br><span class="hljs-keyword">set</span>(LINKER_SCRIPT <span class="hljs-string">&quot;$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/GD32F470VET6_FLASH.ld&quot;</span>)<br><br><span class="hljs-keyword">target_link_options</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE<br>        -T<span class="hljs-variable">$&#123;LINKER_SCRIPT&#125;</span><br>        -Wl,-Map=<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>.map<br>        -Wl,--gc-sections<br>)<br><br><span class="hljs-keyword">target_link_libraries</span>(<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> PRIVATE<br>        m<br>        c<br>        nosys<br>)<br><br><span class="hljs-comment"># 7. 编译后操作：生成 Hex 和 Bin 烧录文件</span><br><span class="hljs-keyword">add_custom_command</span>(<span class="hljs-keyword">TARGET</span> <span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span> POST_BUILD<br>        <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">$&#123;CMAKE_OBJCOPY&#125;</span> -O ihex $&lt;TARGET_FILE:<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>&gt; <span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>.hex<br>        <span class="hljs-keyword">COMMAND</span> <span class="hljs-variable">$&#123;CMAKE_OBJCOPY&#125;</span> -O binary $&lt;TARGET_FILE:<span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>&gt; <span class="hljs-variable">$&#123;CMAKE_PROJECT_NAME&#125;</span>.bin<br>)<br></code></pre></td></tr></table></figure><h3 id="2-OpenOCD-调试配置-stlink-gd32f470-cfg"><a href="#2-OpenOCD-调试配置-stlink-gd32f470-cfg" class="headerlink" title="2. OpenOCD 调试配置 (stlink_gd32f470.cfg)"></a>2. OpenOCD 调试配置 (<code>stlink_gd32f470.cfg</code>)</h3><p>为了让 CLion 能够通过 ST-Link 顺利连接并调试 GD32，我们需要手写一份 cfg 文件。需要特别注意 <code>CPUTAPID</code> 的设置。</p><figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs tcl"><span class="hljs-comment"># 选择调试器接口: ST-Link</span><br><span class="hljs-keyword">source</span> [find interface/stlink.cfg]<br><br><span class="hljs-comment"># 选择传输协议: SWD</span><br>transport select hla_swd<br><br><span class="hljs-comment"># 设置芯片的 CPUTAPID</span><br><span class="hljs-comment"># GD32F470 的 Cortex-M4 内核 ID 通常与 STM32F4 相同 (0x2ba01477)</span><br><span class="hljs-comment"># 如果 OpenOCD 报错识别不到芯片，可以尝试将其设置为 0 (强制忽略 ID 检查)</span><br><span class="hljs-keyword">set</span> CPUTAPID <span class="hljs-number">0x2ba01477</span><br><br><span class="hljs-comment"># 选择目标芯片配置文件</span><br><span class="hljs-comment"># GD32F470 的寄存器映射和调试逻辑完全兼容 STM32F4x，因此直接复用脚本</span><br><span class="hljs-keyword">source</span> [find target/stm32f4x.cfg]<br><br><span class="hljs-comment"># 设置下载速率 (可根据连接稳定性在 2000-8000 之间调整)</span><br>adapter speed <span class="hljs-number">4000</span><br></code></pre></td></tr></table></figure><h3 id="3-GCC-链接脚本-GD32F470VET6-FLASH-ld"><a href="#3-GCC-链接脚本-GD32F470VET6-FLASH-ld" class="headerlink" title="3. GCC 链接脚本 (GD32F470VET6_FLASH.ld)"></a>3. GCC 链接脚本 (<code>GD32F470VET6_FLASH.ld</code>)</h3><p>链接脚本决定了程序的代码和数据在芯片 Flash 和 RAM 中的存放位置。GD32F470VET6 拥有 <strong>512KB Flash</strong> 和 <strong>256KB RAM</strong>（其中包含 192KB 主 SRAM 和 64KB TCMSRAM）。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br></pre></td><td class="code"><pre><code class="hljs ld">/* Entry Point */<br>ENTRY(Reset_Handler)<br><br>/* Specify the memory areas */<br>MEMORY<br>&#123;<br>  /* GD32F470VET6: 512KB Flash, 256KB Total RAM */<br>  /* 主 RAM (SRAM0+SRAM1+SRAM2) */<br>  RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 192K<br>  /* TCMSRAM (对应 STM32 的 CCMRAM 区域) */<br>  CCMRAM (xrw)   : ORIGIN = 0x10000000, LENGTH = 64K<br>  FLASH (rx)     : ORIGIN = 0x08000000, LENGTH = 512K<br>&#125;<br><br>/* 堆栈顶地址更新 */<br>_estack = ORIGIN(RAM) + LENGTH(RAM);<br>/* Generate a link error if heap and stack don&#x27;t fit into RAM */<br>_Min_Heap_Size = 0x200;      /* required amount of heap  */<br>_Min_Stack_Size = 0x400;     /* required amount of stack */<br><br>/* Define output sections */<br>SECTIONS<br>&#123;<br>  /* The startup code goes first into FLASH */<br>  .isr_vector :<br>  &#123;<br>    . = ALIGN(4);<br>    KEEP(*(.isr_vector)) /* Startup code */<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  /* The program code and other data goes into FLASH */<br>  .text :<br>  &#123;<br>    . = ALIGN(4);<br>    *(.text)           /* .text sections (code) */<br>    *(.text*)          /* .text* sections (code) */<br>    *(.glue_7)         /* glue arm to thumb code */<br>    *(.glue_7t)        /* glue thumb to arm code */<br>    *(.eh_frame)<br><br>    KEEP (*(.init))<br>    KEEP (*(.fini))<br><br>    . = ALIGN(4);<br>    _etext = .;        /* define a global symbols at end of code */<br>  &#125; &gt;FLASH<br><br>  /* Constant data goes into FLASH */<br>  .rodata :<br>  &#123;<br>    . = ALIGN(4);<br>    *(.rodata)         /* .rodata sections (constants, strings, etc.) */<br>    *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  .ARM.extab (READONLY) : <br>  &#123;<br>    . = ALIGN(4);<br>    *(.ARM.extab* .gnu.linkonce.armextab.*)<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  .ARM (READONLY) : <br>  &#123;<br>    . = ALIGN(4);<br>    __exidx_start = .;<br>    *(.ARM.exidx*)<br>    __exidx_end = .;<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  .preinit_array (READONLY) : <br>  &#123;<br>    . = ALIGN(4);<br>    PROVIDE_HIDDEN (__preinit_array_start = .);<br>    KEEP (*(.preinit_array*))<br>    PROVIDE_HIDDEN (__preinit_array_end = .);<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  .init_array (READONLY) : <br>  &#123;<br>    . = ALIGN(4);<br>    PROVIDE_HIDDEN (__init_array_start = .);<br>    KEEP (*(SORT(.init_array.*)))<br>    KEEP (*(.init_array*))<br>    PROVIDE_HIDDEN (__init_array_end = .);<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  .fini_array (READONLY) : <br>  &#123;<br>    . = ALIGN(4);<br>    PROVIDE_HIDDEN (__fini_array_start = .);<br>    KEEP (*(SORT(.fini_array.*)))<br>    KEEP (*(.fini_array*))<br>    PROVIDE_HIDDEN (__fini_array_end = .);<br>    . = ALIGN(4);<br>  &#125; &gt;FLASH<br><br>  _siccmram = LOADADDR(.ccmram);<br><br>  .ccmram :<br>  &#123;<br>    . = ALIGN(4);<br>    _sccmram = .;       /* create a global symbol at ccmram start */<br>    *(.ccmram)<br>    *(.ccmram*)<br>    . = ALIGN(4);<br>    _eccmram = .;       /* create a global symbol at ccmram end */<br>  &#125; &gt;CCMRAM AT&gt; FLASH<br><br>  _sidata = LOADADDR(.data);<br><br>  .data :<br>  &#123;<br>    . = ALIGN(4);<br>    _sdata = .;        /* create a global symbol at data start */<br>    *(.data)           /* .data sections */<br>    *(.data*)          /* .data* sections */<br>    *(.RamFunc)        /* .RamFunc sections */<br>    *(.RamFunc*)       /* .RamFunc* sections */<br>    . = ALIGN(4);<br>  &#125; &gt;RAM AT&gt; FLASH<br><br>  .tdata : ALIGN(4)<br>  &#123;<br>    *(.tdata .tdata.* .gnu.linkonce.td.*)<br>    . = ALIGN(4);<br>    _edata = .;        <br>    PROVIDE(__data_end = .);<br>    PROVIDE(__tdata_end = .);<br>  &#125; &gt;RAM AT&gt; FLASH<br><br>  PROVIDE( __tdata_start = ADDR(.tdata) );<br>  PROVIDE( __tdata_size = __tdata_end - __tdata_start );<br>  PROVIDE( __data_start = ADDR(.data) );<br>  PROVIDE( __data_size = __data_end - __data_start );<br>  PROVIDE( __tdata_source = LOADADDR(.tdata) );<br>  PROVIDE( __tdata_source_end = LOADADDR(.tdata) + SIZEOF(.tdata) );<br>  PROVIDE( __tdata_source_size = __tdata_source_end - __tdata_source );<br>  PROVIDE( __data_source = LOADADDR(.data) );<br>  PROVIDE( __data_source_end = __tdata_source_end );<br>  PROVIDE( __data_source_size = __data_source_end - __data_source );<br><br>  .tbss (NOLOAD) : ALIGN(4)<br>  &#123;<br>    _sbss = .;         <br>    __bss_start__ = _sbss;<br>    *(.tbss .tbss.*)<br>    . = ALIGN(4);<br>    PROVIDE( __tbss_end = . );<br>  &#125; &gt;RAM<br><br>  PROVIDE( __tbss_start = ADDR(.tbss) );<br>  PROVIDE( __tbss_size = __tbss_end - __tbss_start );<br>  PROVIDE( __tbss_offset = ADDR(.tbss) - ADDR(.tdata) );<br>  PROVIDE( __tls_base = __tdata_start );<br>  PROVIDE( __tls_end = __tbss_end );<br>  PROVIDE( __tls_size = __tls_end - __tls_base );<br>  PROVIDE( __tls_align = MAX(ALIGNOF(.tdata), ALIGNOF(.tbss)) );<br>  PROVIDE( __tls_size_align = (__tls_size + __tls_align - 1) &amp; ~(__tls_align - 1) );<br>  PROVIDE( __arm32_tls_tcb_offset = MAX(8, __tls_align) );<br>  PROVIDE( __arm64_tls_tcb_offset = MAX(16, __tls_align) );<br><br>  .bss (NOLOAD) : ALIGN(4)<br>  &#123;<br>    *(.bss)<br>    *(.bss*)<br>    *(COMMON)<br>    . = ALIGN(4);<br>    _ebss = .;         <br>    __bss_end__ = _ebss;<br>    PROVIDE( __bss_end = .);<br>  &#125; &gt;RAM<br>  <br>  PROVIDE( __non_tls_bss_start = ADDR(.bss) );<br>  PROVIDE( __bss_start = __tbss_start );<br>  PROVIDE( __bss_size = __bss_end - __bss_start );<br><br>  ._user_heap_stack (NOLOAD) :<br>  &#123;<br>    . = ALIGN(8);<br>    PROVIDE ( end = . );<br>    PROVIDE ( _end = . );<br>    . = . + _Min_Heap_Size;<br>    . = . + _Min_Stack_Size;<br>    . = ALIGN(8);<br>  &#125; &gt;RAM<br><br>  /DISCARD/ :<br>  &#123;<br>    libc.a:* ( * )<br>    libm.a:* ( * )<br>    libgcc.a:* ( * )<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure><hr><h2 id="三、启动文件与链接脚本的对齐"><a href="#三、启动文件与链接脚本的对齐" class="headerlink" title="三、启动文件与链接脚本的对齐"></a>三、启动文件与链接脚本的对齐</h2><p>在这里必须着重记录一个巨大的坑。</p><p>GD32 官方固件库提供的 GCC 版 <code>startup_gd32f407_427.s</code> 启动文件，其默认的宏命名与上文配置的 <code>.ld</code> 链接脚本存在差异。如果不统一，会导致编译出的固件丢失中断向量表，单片机一上电 CPU 指针就会跑飞（卡死在无数个 <code>movs r0, r0</code> 空指令中）。</p><p><strong>我们需要在 <code>.s</code> 启动文件中修改两个地方：</strong></p><ol><li>向量表存放的<strong>段名</strong>没对上（链接器找不到位置）。</li><li><strong>栈顶指针变量名</strong>没对上（导致上电后 MSP 错误）。</li></ol><p>在 <code>startup_gd32f407_427.s</code> 文件中找到定义中断向量表的位置进行修改：</p><p><strong>❌ 官方默认的错误代码：</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.section  .vectors,&quot;a&quot;,%progbits       /* ❌ 错误 1：段名不对，链接脚本中叫 .isr_vector */<br>   .global __gVectors<br><br>__gVectors:<br>                    .word _sp             /* ❌ 错误 2：栈顶指针不对，链接脚本中叫 _estack */<br>                    .word Reset_Handler   /* Reset Handler */<br></code></pre></td></tr></table></figure><p><strong>✅ 修正后的正确代码：</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">.section  .isr_vector,&quot;a&quot;,%progbits    /* ✅ 修正：改为与 ld 脚本一致的 .isr_vector */<br>   .global __gVectors<br><br>__gVectors:<br>                    .word _estack         /* ✅ 修正：改为与 ld 脚本一致的 _estack */<br>                    .word Reset_Handler   /* Reset Handler */<br></code></pre></td></tr></table></figure><p>修改完毕后，清理 CMake 缓存并重新编译下载，代码终于稳稳地跳进了 <code>main()</code> 函数，LED 成功闪烁了起来！</p><p>自此，GD32F470 的现代版 CLion 开发环境全部配置完成！</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>嵌入式开发</category>
+      
+      <category>GD32</category>
+      
+      <category>西门子杯</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>GD32</tag>
+      
+      <tag>西门子杯</tag>
+      
+      <tag>环境配置</tag>
+      
+      <tag>GCC</tag>
+      
+      <tag>CMake</tag>
+      
+      <tag>嵌入式开发</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>STM32开发备忘录：USART串口通信与中断收发</title>
     <link href="/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA%E5%BA%93/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA/"/>
     <url>/2026/04/11/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA%E5%BA%93/%E4%B8%B2%E5%8F%A3%E8%BE%93%E5%87%BA/</url>
@@ -24,13 +63,13 @@
     
     <tags>
       
-      <tag>蓝桥杯</tag>
+      <tag>嵌入式开发</tag>
       
       <tag>STM32</tag>
       
-      <tag>笔记</tag>
+      <tag>蓝桥杯</tag>
       
-      <tag>嵌入式开发</tag>
+      <tag>笔记</tag>
       
       <tag>USART</tag>
       
@@ -65,17 +104,17 @@
     
     <tags>
       
-      <tag>蓝桥杯</tag>
+      <tag>嵌入式开发</tag>
       
       <tag>STM32</tag>
       
-      <tag>笔记</tag>
-      
-      <tag>嵌入式开发</tag>
+      <tag>蓝桥杯</tag>
       
       <tag>I2C</tag>
       
       <tag>EEPROM</tag>
+      
+      <tag>笔记</tag>
       
     </tags>
     
@@ -104,17 +143,17 @@
     
     <tags>
       
-      <tag>PWM</tag>
-      
-      <tag>定时器</tag>
-      
-      <tag>蓝桥杯</tag>
+      <tag>嵌入式开发</tag>
       
       <tag>STM32</tag>
       
+      <tag>蓝桥杯</tag>
+      
       <tag>笔记</tag>
       
-      <tag>嵌入式开发</tag>
+      <tag>PWM</tag>
+      
+      <tag>定时器</tag>
       
     </tags>
     
@@ -143,13 +182,13 @@
     
     <tags>
       
-      <tag>蓝桥杯</tag>
+      <tag>嵌入式开发</tag>
       
       <tag>STM32</tag>
       
-      <tag>笔记</tag>
+      <tag>蓝桥杯</tag>
       
-      <tag>嵌入式开发</tag>
+      <tag>笔记</tag>
       
       <tag>按键扫描</tag>
       
@@ -182,15 +221,15 @@
     
     <tags>
       
-      <tag>定时器</tag>
-      
-      <tag>蓝桥杯</tag>
+      <tag>嵌入式开发</tag>
       
       <tag>STM32</tag>
       
+      <tag>蓝桥杯</tag>
+      
       <tag>笔记</tag>
       
-      <tag>嵌入式开发</tag>
+      <tag>定时器</tag>
       
       <tag>输入捕获</tag>
       
@@ -223,11 +262,11 @@
     
     <tags>
       
-      <tag>蓝桥杯</tag>
+      <tag>ADC</tag>
       
       <tag>STM32</tag>
       
-      <tag>ADC</tag>
+      <tag>蓝桥杯</tag>
       
       <tag>笔记，嵌入式开发</tag>
       
@@ -254,11 +293,11 @@
     
     <tags>
       
-      <tag>蓝桥杯</tag>
+      <tag>嵌入式开发</tag>
       
       <tag>STM32</tag>
       
-      <tag>嵌入式开发</tag>
+      <tag>蓝桥杯</tag>
       
       <tag>LCD</tag>
       
