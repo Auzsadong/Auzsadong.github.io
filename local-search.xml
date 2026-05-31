@@ -8,7 +8,7 @@
     <link href="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/"/>
     <url>/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/</url>
     
-    <content type="html"><![CDATA[<h1 id="STM32开发备忘录：TIM触发DAC与底层驱动指南"><a href="#STM32开发备忘录：TIM触发DAC与底层驱动指南" class="headerlink" title="STM32开发备忘录：TIM触发DAC与底层驱动指南"></a>STM32开发备忘录：TIM触发DAC与底层驱动指南</h1><p>在嵌入式信号处理中，如果仅依靠 CPU 软件循环或延时来刷新 DAC 的输出寄存器，不仅极大地占用系统资源，而且波形输出极易受到系统中断的干扰，产生时序抖动（Jitter）。</p><p>本备忘录记录了**“定时器（TIM）触发 + DMA 自动搬运 + DAC 硬件输出”**的标准配置流程。通过配置纯硬件链路，可以彻底解放 CPU，实现精准控制输出频率以及极其平滑的任意波形生成。</p><hr><h2 id="第一步：配置基本定时器-TIM6"><a href="#第一步：配置基本定时器-TIM6" class="headerlink" title="第一步：配置基本定时器 (TIM6)"></a>第一步：配置基本定时器 (TIM6)</h2><p>基本定时器（如 TIM6 &#x2F; TIM7）非常适合用作内部硬件触发源。</p><ol><li><p><strong>启用定时器</strong>：在 STM32CubeMX 左侧菜单栏选择 <strong>Timers -&gt; TIM6</strong>，勾选 <strong>Activated</strong> 开启外设。</p></li><li><p><strong>配置频率参数</strong>：在下方的 <strong>Configuration -&gt; Parameter Settings</strong> 中设置预分频器和重装载值：</p><ul><li><strong>Prescaler (PSC)</strong>：假设系统时钟 ($f_{\text{TIM_CLK}}$) 为 170MHz，设为 <code>170 - 1</code>，则分频后的定时器计数基准时钟为 1MHz。</li><li><strong>Counter Period (ARR)</strong>：假设希望 DAC 的触发采样率为 10kHz，则设为 <code>100 - 1</code>。</li></ul><blockquote><p><strong>触发频率计算公式：</strong><br>$$f_{\text{trigger}} &#x3D; \frac{f_{\text{TIM_CLK}}}{(PSC + 1) \times (ARR + 1)}$$</p></blockquote></li><li><p><strong>设置触发输出 (TRGO)【关键】</strong>：</p><ul><li>展开 <strong>Trigger Output (TRGO) Parameters</strong>。</li><li>将 <strong>Trigger Event Selection</strong> 设置为 <strong>Update Event</strong>。这表示每次定时器计数溢出（Update）时，硬件都会在芯片内部总线上广播一个触发信号。</li></ul></li></ol><p><img src="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/TIM6%E8%A7%A6%E5%8F%91%E9%85%8D%E7%BD%AE.png" alt="TIM6触发配置"></p><hr><h2 id="第二步：配置数模转换器-DAC"><a href="#第二步：配置数模转换器-DAC" class="headerlink" title="第二步：配置数模转换器 (DAC)"></a>第二步：配置数模转换器 (DAC)</h2><ol><li><p><strong>选择通道</strong>：在左侧菜单栏选择 <strong>Analog -&gt; DAC1</strong>。</p></li><li><p><strong>配置输出引脚网络</strong>：在 <strong>OUT1 Configuration</strong> 中：</p><ul><li>若仅需输出到外部物理引脚，勾选 <strong>Connected to external pin only</strong>。</li><li>若内部需要级联比较器或运放等外设联调，选择 <strong>Connected to external pin and to on chip peripherals</strong>。</li></ul><blockquote><p>💡 <strong>硬件避坑提示：</strong><br>关于 <strong>Output Buffer</strong>：启用该缓冲器可以大幅增强引脚的输出驱动能力，降低输出阻抗。但是，如果你的硬件开发板上 DAC 输出端已经级联了外部运放（Op-Amp）构成的跟随器或滤波电路，建议将其设为 <strong>Disable</strong>，以避免内部缓冲器带来的额外失调电压影响精度。</p></blockquote></li><li><p><strong>配置触发参数 (Parameter Settings)</strong>：</p><ul><li><strong>Trigger</strong>：选择 <strong>Timer 6 Trigger Out event</strong>（必须与第一步配置的触发源严格对应）。</li><li><strong>Wave generation mode</strong>：设置为 <strong>Disabled</strong>（本文采用自定义波形数组，不使用内置的三角波&#x2F;噪声波生成器）。</li></ul></li></ol><p><img src="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/DAC%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0.png" alt="DAC配置参数"></p><hr><h2 id="第三步：配置直接内存访问-DMA"><a href="#第三步：配置直接内存访问-DMA" class="headerlink" title="第三步：配置直接内存访问 (DMA)"></a>第三步：配置直接内存访问 (DMA)</h2><p>为了让数据源源不断地送入 DAC，我们需要引入 DMA。</p><ol><li><strong>添加通道</strong>：在 DAC 的配置页面，切换到 <strong>DMA Settings</strong> 标签页。</li><li><strong>绑定请求</strong>：点击 <strong>Add</strong>，分配 <code>DAC1_CH1</code> 请求。</li><li><strong>模式与数据流设置</strong>：<ul><li><strong>Mode</strong>：强烈建议设置为 <strong>Circular</strong>（循环模式）。这样当 DMA 搬运完数组的最后一个数据后，会自动回到数组头部重新开始，实现周期波形的无限续航。</li><li><strong>Data Width</strong>：Peripheral（外设）与 Memory（内存）均设置为 <strong>Word</strong>（32位宽，适配 STM32 的总线和 12-bit 数据对齐）。</li></ul></li></ol><p><img src="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/DMA%E9%85%8D%E7%BD%AE%E9%A1%B5%E9%9D%A2.png" alt="DMA配置页面"></p><hr><h2 id="第四步：核心驱动代码实现"><a href="#第四步：核心驱动代码实现" class="headerlink" title="第四步：核心驱动代码实现"></a>第四步：核心驱动代码实现</h2><p>在 STM32CubeMX 生成代码并完成初始化后，可在业务逻辑层添加以下波形查找表（LUT）与启动代码。这里以一个 64 个采样点的完整正弦波为例（数据范围 0~4095，适配 12-bit DAC）：</p><pre><code class="language-c">/* USER CODE BEGIN 0 */// 定义64点的 12-bit 正弦波数据表const uint32_t wave_data_64[64] = {      2048, 2248, 2447, 2642, 2831, 3013, 3185, 3346,      3495, 3630, 3750, 3853, 3939, 4006, 4056, 4085,      4095, 4085, 4056, 4006, 3939, 3853, 3750, 3630,      3495, 3346, 3185, 3013, 2831, 2642, 2447, 2248,      2048, 1847, 1648, 1453, 1264, 1082,  910,  749,       600,  465,  345,  242,  156,   89,   39,   10,         0,   10,   39,   89,  156,  242,  345,  465,       600,  749,  910, 1082, 1264, 1453, 1648, 1847 };/** * @brief  启动 DAC 波形输出 * @note   务必确保 DMA 和 TIM 在此之前已完成系统初始化 */void DAC_Wave_Start(void){    // 1. 开启 DAC 的 DMA 循环搬运    // 参数含义：DAC句柄, 通道, 数据表首地址(强转为uint32_t*), 采样点数量, 12位右对齐模式    HAL_DAC_Start_DMA(&amp;hdac1, DAC_CHANNEL_1, (uint32_t*)wave_data_64, 64, DAC_ALIGN_12B_R);            // 2. 启动 TIM6 定时器，开始向 DAC 发送触发脉冲    HAL_TIM_Base_Start(&amp;htim6);}/* USER CODE END 0 */</code></pre>]]></content>
+    <content type="html"><![CDATA[<h1 id="STM32开发备忘录：TIM触发DAC与底层驱动指南"><a href="#STM32开发备忘录：TIM触发DAC与底层驱动指南" class="headerlink" title="STM32开发备忘录：TIM触发DAC与底层驱动指南"></a>STM32开发备忘录：TIM触发DAC与底层驱动指南</h1><p>在嵌入式信号处理中，如果仅依靠 CPU 软件循环或延时来刷新 DAC 的输出寄存器，不仅极大地占用系统资源，而且波形输出极易受到系统中断的干扰，产生时序抖动（Jitter）。</p><p>本备忘录记录了**“定时器（TIM）触发 + DMA 自动搬运 + DAC 硬件输出”**的标准配置流程。通过配置纯硬件链路，可以彻底解放 CPU，实现精准控制输出频率以及极其平滑的任意波形生成。</p><hr><h2 id="第一步：配置基本定时器-TIM6"><a href="#第一步：配置基本定时器-TIM6" class="headerlink" title="第一步：配置基本定时器 (TIM6)"></a>第一步：配置基本定时器 (TIM6)</h2><p>基本定时器（如 TIM6 &#x2F; TIM7）非常适合用作内部硬件触发源。</p><ol><li><p><strong>启用定时器</strong>：在 STM32CubeMX 左侧菜单栏选择 <strong>Timers -&gt; TIM6</strong>，勾选 <strong>Activated</strong> 开启外设。</p></li><li><p><strong>配置频率参数</strong>：在下方的 <strong>Configuration -&gt; Parameter Settings</strong> 中设置预分频器和重装载值：</p><ul><li><strong>Prescaler (PSC)</strong>：假设系统时钟 ($f_{\text{TIM_CLK}}$) 为 170MHz，设为 <code>170 - 1</code>，则分频后的定时器计数基准时钟为 1MHz。</li><li><strong>Counter Period (ARR)</strong>：假设希望 DAC 的触发采样率为 10kHz，则设为 <code>100 - 1</code>。</li></ul><blockquote><p><strong>触发频率计算公式：</strong><br>$$f_{\text{trigger}} &#x3D; \frac{f_{\text{TIM_CLK}}}{(PSC + 1) \times (ARR + 1)}$$</p></blockquote></li><li><p><strong>设置触发输出 (TRGO)【关键】</strong>：</p><ul><li>展开 <strong>Trigger Output (TRGO) Parameters</strong>。</li><li>将 <strong>Trigger Event Selection</strong> 设置为 <strong>Update Event</strong>。这表示每次定时器计数溢出（Update）时，硬件都会在芯片内部总线上广播一个触发信号。</li></ul></li></ol><p><img src="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/TIM6%E8%A7%A6%E5%8F%91%E9%85%8D%E7%BD%AE.png" alt="TIM6触发配置"></p><hr><h2 id="第二步：配置数模转换器-DAC"><a href="#第二步：配置数模转换器-DAC" class="headerlink" title="第二步：配置数模转换器 (DAC)"></a>第二步：配置数模转换器 (DAC)</h2><ol><li><p><strong>选择通道</strong>：在左侧菜单栏选择 <strong>Analog -&gt; DAC1</strong>。</p></li><li><p><strong>配置输出引脚网络</strong>：在 <strong>OUT1 Configuration</strong> 中：</p><ul><li>若仅需输出到外部物理引脚，勾选 <strong>Connected to external pin only</strong>。</li><li>若内部需要级联比较器或运放等外设联调，选择 <strong>Connected to external pin and to on chip peripherals</strong>。</li></ul><blockquote><p>💡 <strong>硬件避坑提示：</strong><br>关于 <strong>Output Buffer</strong>：启用该缓冲器可以大幅增强引脚的输出驱动能力，降低输出阻抗。但是，如果你的硬件开发板上 DAC 输出端已经级联了外部运放（Op-Amp）构成的跟随器或滤波电路，建议将其设为 <strong>Disable</strong>，以避免内部缓冲器带来的额外失调电压影响精度。</p></blockquote></li><li><p><strong>配置触发参数 (Parameter Settings)</strong>：</p><ul><li><strong>Trigger</strong>：选择 <strong>Timer 6 Trigger Out event</strong>（必须与第一步配置的触发源严格对应）。</li><li><strong>Wave generation mode</strong>：设置为 <strong>Disabled</strong>（本文采用自定义波形数组，不使用内置的三角波&#x2F;噪声波生成器）。</li></ul></li></ol><p><img src="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/DAC%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0.png" alt="DAC配置参数"></p><hr><h2 id="第三步：配置直接内存访问-DMA"><a href="#第三步：配置直接内存访问-DMA" class="headerlink" title="第三步：配置直接内存访问 (DMA)"></a>第三步：配置直接内存访问 (DMA)</h2><p>为了让数据源源不断地送入 DAC，我们需要引入 DMA。</p><ol><li><strong>添加通道</strong>：在 DAC 的配置页面，切换到 <strong>DMA Settings</strong> 标签页。</li><li><strong>绑定请求</strong>：点击 <strong>Add</strong>，分配 <code>DAC1_CH1</code> 请求。</li><li><strong>模式与数据流设置</strong>：<ul><li><strong>Mode</strong>：强烈建议设置为 <strong>Circular</strong>（循环模式）。这样当 DMA 搬运完数组的最后一个数据后，会自动回到数组头部重新开始，实现周期波形的无限续航。</li><li><strong>Data Width</strong>：Peripheral（外设）与 Memory（内存）均设置为 <strong>Word</strong>（32位宽，适配 STM32 的总线和 12-bit 数据对齐）。</li></ul></li></ol><p><img src="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/DMA%E9%85%8D%E7%BD%AE%E9%A1%B5%E9%9D%A2.png" alt="DMA配置页面"></p><hr><h2 id="第四步：核心驱动代码实现"><a href="#第四步：核心驱动代码实现" class="headerlink" title="第四步：核心驱动代码实现"></a>第四步：核心驱动代码实现</h2><p>在 STM32CubeMX 生成代码并完成初始化后，可在业务逻辑层添加以下波形查找表（LUT）与启动代码。这里以一个 64 个采样点的完整正弦波为例（数据范围 0~4095，适配 12-bit DAC）：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">/* USER CODE BEGIN 0 */</span><br><br><span class="hljs-comment">// 定义64点的 12-bit 正弦波数据表</span><br><span class="hljs-type">const</span> <span class="hljs-type">uint32_t</span> wave_data_64[<span class="hljs-number">64</span>] = &#123;  <br>    <span class="hljs-number">2048</span>, <span class="hljs-number">2248</span>, <span class="hljs-number">2447</span>, <span class="hljs-number">2642</span>, <span class="hljs-number">2831</span>, <span class="hljs-number">3013</span>, <span class="hljs-number">3185</span>, <span class="hljs-number">3346</span>,  <br>    <span class="hljs-number">3495</span>, <span class="hljs-number">3630</span>, <span class="hljs-number">3750</span>, <span class="hljs-number">3853</span>, <span class="hljs-number">3939</span>, <span class="hljs-number">4006</span>, <span class="hljs-number">4056</span>, <span class="hljs-number">4085</span>,  <br>    <span class="hljs-number">4095</span>, <span class="hljs-number">4085</span>, <span class="hljs-number">4056</span>, <span class="hljs-number">4006</span>, <span class="hljs-number">3939</span>, <span class="hljs-number">3853</span>, <span class="hljs-number">3750</span>, <span class="hljs-number">3630</span>,  <br>    <span class="hljs-number">3495</span>, <span class="hljs-number">3346</span>, <span class="hljs-number">3185</span>, <span class="hljs-number">3013</span>, <span class="hljs-number">2831</span>, <span class="hljs-number">2642</span>, <span class="hljs-number">2447</span>, <span class="hljs-number">2248</span>,  <br>    <span class="hljs-number">2048</span>, <span class="hljs-number">1847</span>, <span class="hljs-number">1648</span>, <span class="hljs-number">1453</span>, <span class="hljs-number">1264</span>, <span class="hljs-number">1082</span>,  <span class="hljs-number">910</span>,  <span class="hljs-number">749</span>,  <br>     <span class="hljs-number">600</span>,  <span class="hljs-number">465</span>,  <span class="hljs-number">345</span>,  <span class="hljs-number">242</span>,  <span class="hljs-number">156</span>,   <span class="hljs-number">89</span>,   <span class="hljs-number">39</span>,   <span class="hljs-number">10</span>,  <br>       <span class="hljs-number">0</span>,   <span class="hljs-number">10</span>,   <span class="hljs-number">39</span>,   <span class="hljs-number">89</span>,  <span class="hljs-number">156</span>,  <span class="hljs-number">242</span>,  <span class="hljs-number">345</span>,  <span class="hljs-number">465</span>,  <br>     <span class="hljs-number">600</span>,  <span class="hljs-number">749</span>,  <span class="hljs-number">910</span>, <span class="hljs-number">1082</span>, <span class="hljs-number">1264</span>, <span class="hljs-number">1453</span>, <span class="hljs-number">1648</span>, <span class="hljs-number">1847</span> <br>&#125;;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @brief  启动 DAC 波形输出</span><br><span class="hljs-comment"> * @note   务必确保 DMA 和 TIM 在此之前已完成系统初始化</span><br><span class="hljs-comment"> */</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">DAC_Wave_Start</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span><br>&#123;<br>    <span class="hljs-comment">// 1. 开启 DAC 的 DMA 循环搬运</span><br>    <span class="hljs-comment">// 参数含义：DAC句柄, 通道, 数据表首地址(强转为uint32_t*), 采样点数量, 12位右对齐模式</span><br>    HAL_DAC_Start_DMA(&amp;hdac1, DAC_CHANNEL_1, (<span class="hljs-type">uint32_t</span>*)wave_data_64, <span class="hljs-number">64</span>, DAC_ALIGN_12B_R);  <br>      <br>    <span class="hljs-comment">// 2. 启动 TIM6 定时器，开始向 DAC 发送触发脉冲</span><br>    HAL_TIM_Base_Start(&amp;htim6);<br>&#125;<br><br><span class="hljs-comment">/* USER CODE END 0 */</span><br></code></pre></td></tr></table></figure>]]></content>
     
     
     <categories>
@@ -22,8 +22,6 @@
     
     <tags>
       
-      <tag>嵌入式开发</tag>
-      
       <tag>DAC</tag>
       
       <tag>TIM</tag>
@@ -31,6 +29,8 @@
       <tag>DMA</tag>
       
       <tag>笔记</tag>
+      
+      <tag>嵌入式开发</tag>
       
     </tags>
     
@@ -59,6 +59,8 @@
     
     <tags>
       
+      <tag>嵌入式开发</tag>
+      
       <tag>GD32</tag>
       
       <tag>西门子杯</tag>
@@ -68,8 +70,6 @@
       <tag>GCC</tag>
       
       <tag>CMake</tag>
-      
-      <tag>嵌入式开发</tag>
       
     </tags>
     
@@ -89,9 +89,9 @@
       
       <category>嵌入式开发</category>
       
-      <category>蓝桥杯</category>
-      
       <category>STM32</category>
+      
+      <category>蓝桥杯</category>
       
     </categories>
     
@@ -102,9 +102,9 @@
       
       <tag>蓝桥杯</tag>
       
-      <tag>嵌入式开发</tag>
-      
       <tag>笔记</tag>
+      
+      <tag>嵌入式开发</tag>
       
       <tag>USART</tag>
       
@@ -130,9 +130,9 @@
       
       <category>嵌入式开发</category>
       
-      <category>蓝桥杯</category>
-      
       <category>STM32</category>
+      
+      <category>蓝桥杯</category>
       
     </categories>
     
@@ -143,9 +143,9 @@
       
       <tag>蓝桥杯</tag>
       
-      <tag>嵌入式开发</tag>
-      
       <tag>笔记</tag>
+      
+      <tag>嵌入式开发</tag>
       
       <tag>I2C</tag>
       
@@ -169,9 +169,9 @@
       
       <category>嵌入式开发</category>
       
-      <category>蓝桥杯</category>
-      
       <category>STM32</category>
+      
+      <category>蓝桥杯</category>
       
     </categories>
     
@@ -182,9 +182,9 @@
       
       <tag>蓝桥杯</tag>
       
-      <tag>嵌入式开发</tag>
-      
       <tag>笔记</tag>
+      
+      <tag>嵌入式开发</tag>
       
       <tag>PWM</tag>
       
@@ -208,9 +208,9 @@
       
       <category>嵌入式开发</category>
       
-      <category>蓝桥杯</category>
-      
       <category>STM32</category>
+      
+      <category>蓝桥杯</category>
       
     </categories>
     
@@ -221,9 +221,9 @@
       
       <tag>蓝桥杯</tag>
       
-      <tag>嵌入式开发</tag>
-      
       <tag>笔记</tag>
+      
+      <tag>嵌入式开发</tag>
       
       <tag>按键扫描</tag>
       
@@ -247,9 +247,9 @@
       
       <category>嵌入式开发</category>
       
-      <category>蓝桥杯</category>
-      
       <category>STM32</category>
+      
+      <category>蓝桥杯</category>
       
     </categories>
     
@@ -260,9 +260,9 @@
       
       <tag>蓝桥杯</tag>
       
-      <tag>嵌入式开发</tag>
-      
       <tag>笔记</tag>
+      
+      <tag>嵌入式开发</tag>
       
       <tag>定时器</tag>
       
@@ -288,9 +288,9 @@
       
       <category>嵌入式开发</category>
       
-      <category>蓝桥杯</category>
-      
       <category>STM32</category>
+      
+      <category>蓝桥杯</category>
       
     </categories>
     
