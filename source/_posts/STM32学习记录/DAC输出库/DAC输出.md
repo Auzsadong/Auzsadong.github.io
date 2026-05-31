@@ -1,6 +1,6 @@
 ---
 title: "STM32开发备忘录：TIM触发DAC与底层驱动指南"
-date: 2026-04-11 16:30:00
+date: 2026-05-31 16:30:00
 math: true
 categories:
   - [嵌入式开发, STM32]
