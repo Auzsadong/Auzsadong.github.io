@@ -344,7 +344,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/" target="_self">
         <div>
-          STM32开发备忘录：TIM触发DAC与底层驱动指南本备忘录记录了使用定时器（TIM）触发数模转换器（DAC）输出的配置流程。通过定时器触发可以精准控制DAC的输出频率以及波形的平滑度。  第一步：配置基本定时器 (TIM6) 启用定时器：在 STM32CubeMX 左侧菜单栏选择 Timers -&gt; TIM6，勾选 Activated 启用定时器。  配置频率参数：在下方的 Configu
+          STM32开发备忘录：TIM触发DAC与底层驱动指南在嵌入式信号处理中，如果仅依靠 CPU 软件循环或延时来刷新 DAC 的输出寄存器，不仅极大地占用系统资源，而且波形输出极易受到系统中断的干扰，产生时序抖动（Jitter）。 本备忘录记录了**“定时器（TIM）触发 + DMA 自动搬运 + DAC 硬件输出”**的标准配置流程。通过配置纯硬件链路，可以彻底解放 CPU，实现精准控制输出频率以及
         </div>
       </a>
 
@@ -392,13 +392,13 @@
             
               <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/">#嵌入式开发</a>
             
-              <a href="/tags/%E7%AC%94%E8%AE%B0/">#笔记</a>
-            
               <a href="/tags/DAC/">#DAC</a>
             
               <a href="/tags/TIM/">#TIM</a>
             
               <a href="/tags/DMA/">#DMA</a>
+            
+              <a href="/tags/%E7%AC%94%E8%AE%B0/">#笔记</a>
             
           </div>
         
@@ -641,11 +641,11 @@
             
               <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/">#嵌入式开发</a>
             
+              <a href="/tags/%E7%AC%94%E8%AE%B0/">#笔记</a>
+            
               <a href="/tags/I2C/">#I2C</a>
             
               <a href="/tags/EEPROM/">#EEPROM</a>
-            
-              <a href="/tags/%E7%AC%94%E8%AE%B0/">#笔记</a>
             
           </div>
         

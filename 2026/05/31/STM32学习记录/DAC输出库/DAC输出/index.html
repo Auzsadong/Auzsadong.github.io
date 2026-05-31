@@ -19,15 +19,18 @@
   <meta name="author" content="Auzsadong">
   <meta name="keywords" content="嵌入式, 硬件, STM32, FPGA, Auzsadong">
   
-    <meta name="description" content="STM32开发备忘录：TIM触发DAC与底层驱动指南本备忘录记录了使用定时器（TIM）触发数模转换器（DAC）输出的配置流程。通过定时器触发可以精准控制DAC的输出频率以及波形的平滑度。  第一步：配置基本定时器 (TIM6) 启用定时器：在 STM32CubeMX 左侧菜单栏选择 Timers -&gt; TIM6，勾选 Activated 启用定时器。  配置频率参数：在下方的 Configu">
+    <meta name="description" content="STM32开发备忘录：TIM触发DAC与底层驱动指南在嵌入式信号处理中，如果仅依靠 CPU 软件循环或延时来刷新 DAC 的输出寄存器，不仅极大地占用系统资源，而且波形输出极易受到系统中断的干扰，产生时序抖动（Jitter）。 本备忘录记录了**“定时器（TIM）触发 + DMA 自动搬运 + DAC 硬件输出”**的标准配置流程。通过配置纯硬件链路，可以彻底解放 CPU，实现精准控制输出频率以及">
 <meta property="og:type" content="article">
 <meta property="og:title" content="STM32开发备忘录：TIM触发DAC与底层驱动指南">
 <meta property="og:url" content="https://auzsadong.github.io/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/index.html">
 <meta property="og:site_name" content="Auzsadong&#39;s Blog">
-<meta property="og:description" content="STM32开发备忘录：TIM触发DAC与底层驱动指南本备忘录记录了使用定时器（TIM）触发数模转换器（DAC）输出的配置流程。通过定时器触发可以精准控制DAC的输出频率以及波形的平滑度。  第一步：配置基本定时器 (TIM6) 启用定时器：在 STM32CubeMX 左侧菜单栏选择 Timers -&gt; TIM6，勾选 Activated 启用定时器。  配置频率参数：在下方的 Configu">
+<meta property="og:description" content="STM32开发备忘录：TIM触发DAC与底层驱动指南在嵌入式信号处理中，如果仅依靠 CPU 软件循环或延时来刷新 DAC 的输出寄存器，不仅极大地占用系统资源，而且波形输出极易受到系统中断的干扰，产生时序抖动（Jitter）。 本备忘录记录了**“定时器（TIM）触发 + DMA 自动搬运 + DAC 硬件输出”**的标准配置流程。通过配置纯硬件链路，可以彻底解放 CPU，实现精准控制输出频率以及">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://auzsadong.github.io/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/TIM6%E8%A7%A6%E5%8F%91%E9%85%8D%E7%BD%AE.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/DAC%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0.png">
+<meta property="og:image" content="https://auzsadong.github.io/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/DMA%E9%85%8D%E7%BD%AE%E9%A1%B5%E9%9D%A2.png">
 <meta property="article:published_time" content="2026-05-31T08:30:00.000Z">
-<meta property="article:modified_time" content="2026-05-31T09:08:41.296Z">
+<meta property="article:modified_time" content="2026-05-31T09:20:43.445Z">
 <meta property="article:author" content="Auzsadong">
 <meta property="article:tag" content="DAC">
 <meta property="article:tag" content="DMA">
@@ -35,6 +38,7 @@
 <meta property="article:tag" content="嵌入式开发">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://auzsadong.github.io/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/TIM6%E8%A7%A6%E5%8F%91%E9%85%8D%E7%BD%AE.png">
   
   
   
@@ -335,7 +339,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          2.2k 字
         
       </span>
     
@@ -346,7 +350,7 @@
         
         
         
-          16 分钟
+          19 分钟
         
       </span>
     
@@ -390,55 +394,68 @@
             
               <div class="markdown-body">
                 
-                <h1 id="STM32开发备忘录：TIM触发DAC与底层驱动指南"><a href="#STM32开发备忘录：TIM触发DAC与底层驱动指南" class="headerlink" title="STM32开发备忘录：TIM触发DAC与底层驱动指南"></a>STM32开发备忘录：TIM触发DAC与底层驱动指南</h1><p>本备忘录记录了使用定时器（TIM）触发数模转换器（DAC）输出的配置流程。通过定时器触发可以精准控制DAC的输出频率以及波形的平滑度。</p>
+                <h1 id="STM32开发备忘录：TIM触发DAC与底层驱动指南"><a href="#STM32开发备忘录：TIM触发DAC与底层驱动指南" class="headerlink" title="STM32开发备忘录：TIM触发DAC与底层驱动指南"></a>STM32开发备忘录：TIM触发DAC与底层驱动指南</h1><p>在嵌入式信号处理中，如果仅依靠 CPU 软件循环或延时来刷新 DAC 的输出寄存器，不仅极大地占用系统资源，而且波形输出极易受到系统中断的干扰，产生时序抖动（Jitter）。</p>
+<p>本备忘录记录了**“定时器（TIM）触发 + DMA 自动搬运 + DAC 硬件输出”**的标准配置流程。通过配置纯硬件链路，可以彻底解放 CPU，实现精准控制输出频率以及极其平滑的任意波形生成。</p>
 <hr>
-<h2 id="第一步：配置基本定时器-TIM6"><a href="#第一步：配置基本定时器-TIM6" class="headerlink" title="第一步：配置基本定时器 (TIM6)"></a>第一步：配置基本定时器 (TIM6)</h2><ol>
-<li><p><strong>启用定时器</strong>：在 STM32CubeMX 左侧菜单栏选择 <strong>Timers -&gt; TIM6</strong>，勾选 <strong>Activated</strong> 启用定时器。</p>
+<h2 id="第一步：配置基本定时器-TIM6"><a href="#第一步：配置基本定时器-TIM6" class="headerlink" title="第一步：配置基本定时器 (TIM6)"></a>第一步：配置基本定时器 (TIM6)</h2><p>基本定时器（如 TIM6 &#x2F; TIM7）非常适合用作内部硬件触发源。</p>
+<ol>
+<li><p><strong>启用定时器</strong>：在 STM32CubeMX 左侧菜单栏选择 <strong>Timers -&gt; TIM6</strong>，勾选 <strong>Activated</strong> 开启外设。</p>
 </li>
-<li><p><strong>配置频率参数</strong>：在下方的 <strong>Configuration -&gt; Parameter Settings</strong> 中设置：</p>
+<li><p><strong>配置频率参数</strong>：在下方的 <strong>Configuration -&gt; Parameter Settings</strong> 中设置预分频器和重装载值：</p>
 <ul>
-<li><strong>Prescaler (PSC - 16 bits value)</strong>：假设系统时钟 ($f_{\text{TIM_CLK}}$) 为 170MHz，设为 <code>170 - 1</code>，则分频后的定时器计数时钟为 1MHz。</li>
-<li><strong>Counter Period (AutoReload Register - 16 bits value)</strong>：假设希望 DAC 的触发频率为 10kHz，则设为 <code>100 - 1</code>。</li>
+<li><strong>Prescaler (PSC)</strong>：假设系统时钟 ($f_{\text{TIM_CLK}}$) 为 170MHz，设为 <code>170 - 1</code>，则分频后的定时器计数基准时钟为 1MHz。</li>
+<li><strong>Counter Period (ARR)</strong>：假设希望 DAC 的触发采样率为 10kHz，则设为 <code>100 - 1</code>。</li>
 </ul>
-<p><strong>计算公式：</strong><br>$$f_{\text{trigger}} &#x3D; \frac{f_{\text{TIM_CLK}}}{(PSC + 1) \times (ARR + 1)}$$</p>
+<blockquote>
+<p><strong>触发频率计算公式：</strong><br>$$f_{\text{trigger}} &#x3D; \frac{f_{\text{TIM_CLK}}}{(PSC + 1) \times (ARR + 1)}$$</p>
+</blockquote>
 </li>
-<li><p><strong>设置触发输出 (TRGO) 【关键步骤】</strong>：</p>
+<li><p><strong>设置触发输出 (TRGO)【关键】</strong>：</p>
 <ul>
-<li>找到 <strong>Trigger Output (TRGO) Parameters</strong>。</li>
-<li>将 <strong>Trigger Event Selection</strong> 设置为 <strong>Update Event</strong>。这表示每次定时器计数溢出（Update）时，都会向外发送一个触发信号。</li>
+<li>展开 <strong>Trigger Output (TRGO) Parameters</strong>。</li>
+<li>将 <strong>Trigger Event Selection</strong> 设置为 <strong>Update Event</strong>。这表示每次定时器计数溢出（Update）时，硬件都会在芯片内部总线上广播一个触发信号。</li>
 </ul>
 </li>
 </ol>
-<p>![[Pasted image 20260531160421.png]]</p>
+<p><img src="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/TIM6%E8%A7%A6%E5%8F%91%E9%85%8D%E7%BD%AE.png" srcset="/img/loading.gif" lazyload alt="TIM6触发配置"></p>
 <hr>
-<h2 id="第二步：配置DAC"><a href="#第二步：配置DAC" class="headerlink" title="第二步：配置DAC"></a>第二步：配置DAC</h2><ol>
-<li><strong>选择通道</strong>：在左侧菜单栏选择 <strong>Analog -&gt; DAC1</strong>（或其他需要使用的DAC）。</li>
-<li><strong>配置输出引脚</strong>：在 <strong>OUT1 Configuration</strong> 中：<ul>
-<li>如果只需要输出到外部引脚，勾选 <strong>Connected to external pin only</strong>。</li>
-<li>如果内部还需要做比较器等联调，可选 <strong>Connected to external pin and to on chip peripherals</strong>。<br><em>(注：在我们自己的开发板上，由于有外置的运放电路，<strong>Output Buffer</strong> 项建议设为 <strong>Disable</strong>，否则可设为 <strong>Enable</strong> 以增强引脚驱动能力)</em>。</li>
-</ul>
+<h2 id="第二步：配置数模转换器-DAC"><a href="#第二步：配置数模转换器-DAC" class="headerlink" title="第二步：配置数模转换器 (DAC)"></a>第二步：配置数模转换器 (DAC)</h2><ol>
+<li><p><strong>选择通道</strong>：在左侧菜单栏选择 <strong>Analog -&gt; DAC1</strong>。</p>
 </li>
-<li><strong>配置参数 (Parameter Settings)</strong>：<ul>
-<li><strong>Trigger</strong>：选择 <strong>Timer 6 Trigger Out event</strong>（必须与上一步配置的定时器对应）。</li>
-<li><strong>Wave generation mode</strong>：设置为 <strong>Disabled</strong>（如果打算自己在代码里计算点位。如果是生成固定的三角波&#x2F;噪声波，可以选择对应选项）。</li>
+<li><p><strong>配置输出引脚网络</strong>：在 <strong>OUT1 Configuration</strong> 中：</p>
+<ul>
+<li>若仅需输出到外部物理引脚，勾选 <strong>Connected to external pin only</strong>。</li>
+<li>若内部需要级联比较器或运放等外设联调，选择 <strong>Connected to external pin and to on chip peripherals</strong>。</li>
+</ul>
+<blockquote>
+<p>💡 <strong>硬件避坑提示：</strong><br>关于 <strong>Output Buffer</strong>：启用该缓冲器可以大幅增强引脚的输出驱动能力，降低输出阻抗。但是，如果你的硬件开发板上 DAC 输出端已经级联了外部运放（Op-Amp）构成的跟随器或滤波电路，建议将其设为 <strong>Disable</strong>，以避免内部缓冲器带来的额外失调电压影响精度。</p>
+</blockquote>
+</li>
+<li><p><strong>配置触发参数 (Parameter Settings)</strong>：</p>
+<ul>
+<li><strong>Trigger</strong>：选择 <strong>Timer 6 Trigger Out event</strong>（必须与第一步配置的触发源严格对应）。</li>
+<li><strong>Wave generation mode</strong>：设置为 <strong>Disabled</strong>（本文采用自定义波形数组，不使用内置的三角波&#x2F;噪声波生成器）。</li>
 </ul>
 </li>
 </ol>
-<p>![[屏幕截图 2026-05-31 161006.png]]</p>
+<p><img src="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/DAC%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0.png" srcset="/img/loading.gif" lazyload alt="DAC配置参数"></p>
 <hr>
-<h2 id="第三步：配置DMA"><a href="#第三步：配置DMA" class="headerlink" title="第三步：配置DMA"></a>第三步：配置DMA</h2><ol>
+<h2 id="第三步：配置直接内存访问-DMA"><a href="#第三步：配置直接内存访问-DMA" class="headerlink" title="第三步：配置直接内存访问 (DMA)"></a>第三步：配置直接内存访问 (DMA)</h2><p>为了让数据源源不断地送入 DAC，我们需要引入 DMA。</p>
+<ol>
 <li><strong>添加通道</strong>：在 DAC 的配置页面，切换到 <strong>DMA Settings</strong> 标签页。</li>
-<li><strong>添加请求</strong>：点击 <strong>Add</strong>，选择 <code>DAC1_CH1</code>。</li>
-<li><strong>模式与数据宽度设置</strong>：<ul>
-<li><strong>Mode</strong>：设置为 <strong>Circular</strong>（循环模式，适合周期波形连续输出）。</li>
-<li><strong>Data Width (Peripheral &amp; Memory)</strong>：均设置为 <strong>Word</strong>（根据实际数据对齐和寄存器宽度选择）。</li>
+<li><strong>绑定请求</strong>：点击 <strong>Add</strong>，分配 <code>DAC1_CH1</code> 请求。</li>
+<li><strong>模式与数据流设置</strong>：<ul>
+<li><strong>Mode</strong>：强烈建议设置为 <strong>Circular</strong>（循环模式）。这样当 DMA 搬运完数组的最后一个数据后，会自动回到数组头部重新开始，实现周期波形的无限续航。</li>
+<li><strong>Data Width</strong>：Peripheral（外设）与 Memory（内存）均设置为 <strong>Word</strong>（32位宽，适配 STM32 的总线和 12-bit 数据对齐）。</li>
 </ul>
 </li>
 </ol>
-<p>![[屏幕截图 2026-05-31 163229.png]]</p>
+<p><img src="/2026/05/31/STM32%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/DAC%E8%BE%93%E5%87%BA%E5%BA%93/DAC%E8%BE%93%E5%87%BA/DMA%E9%85%8D%E7%BD%AE%E9%A1%B5%E9%9D%A2.png" srcset="/img/loading.gif" lazyload alt="DMA配置页面"></p>
 <hr>
-<h2 id="第四步：核心驱动代码实现"><a href="#第四步：核心驱动代码实现" class="headerlink" title="第四步：核心驱动代码实现"></a>第四步：核心驱动代码实现</h2><p>在初始化完成后，可以在业务代码中添加以下波形数据与启动代码：</p>
-<pre><code class="language-c">// 定义64点的正弦波/任意波形数据
+<h2 id="第四步：核心驱动代码实现"><a href="#第四步：核心驱动代码实现" class="headerlink" title="第四步：核心驱动代码实现"></a>第四步：核心驱动代码实现</h2><p>在 STM32CubeMX 生成代码并完成初始化后，可在业务逻辑层添加以下波形查找表（LUT）与启动代码。这里以一个 64 个采样点的完整正弦波为例（数据范围 0~4095，适配 12-bit DAC）：</p>
+<pre><code class="language-c">/* USER CODE BEGIN 0 */
+
+// 定义64点的 12-bit 正弦波数据表
 const uint32_t wave_data_64[64] = {  
     2048, 2248, 2447, 2642, 2831, 3013, 3185, 3346,  
     3495, 3630, 3750, 3853, 3939, 4006, 4056, 4085,  
@@ -450,16 +467,21 @@ const uint32_t wave_data_64[64] = {
      600,  749,  910, 1082, 1264, 1453, 1648, 1847 
 };
 
+/**
+ * @brief  启动 DAC 波形输出
+ * @note   务必确保 DMA 和 TIM 在此之前已完成系统初始化
+ */
 void DAC_Wave_Start(void)
 {
-    // 1. 开启 DAC 的 DMA 传输  
-    // 参数依次为：DAC句柄, 通道, 数据首地址(强转为uint32_t*), 数组长度, 数据对齐方式  
+    // 1. 开启 DAC 的 DMA 循环搬运
+    // 参数含义：DAC句柄, 通道, 数据表首地址(强转为uint32_t*), 采样点数量, 12位右对齐模式
     HAL_DAC_Start_DMA(&amp;hdac1, DAC_CHANNEL_1, (uint32_t*)wave_data_64, 64, DAC_ALIGN_12B_R);  
       
-    // 2. 启动 TIM6 定时器 (用作DAC触发源)  
-    // 注意：如果您的定时器句柄不是htim6，请替换为您实际使用的定时器句柄  
+    // 2. 启动 TIM6 定时器，开始向 DAC 发送触发脉冲
     HAL_TIM_Base_Start(&amp;htim6);
 }
+
+/* USER CODE END 0 */
 </code></pre>
 
                 
@@ -503,13 +525,13 @@ void DAC_Wave_Start(void)
       
         <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%BC%80%E5%8F%91/" class="print-no-link">#嵌入式开发</a>
       
-        <a href="/tags/%E7%AC%94%E8%AE%B0/" class="print-no-link">#笔记</a>
-      
         <a href="/tags/DAC/" class="print-no-link">#DAC</a>
       
         <a href="/tags/TIM/" class="print-no-link">#TIM</a>
       
         <a href="/tags/DMA/" class="print-no-link">#DMA</a>
+      
+        <a href="/tags/%E7%AC%94%E8%AE%B0/" class="print-no-link">#笔记</a>
       
     </div>
   
