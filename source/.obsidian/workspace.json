@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "5f5f5996cf05c66c",
+        "id": "ee0530bf6ca50575",
         "type": "tabs",
         "children": [
           {
-            "id": "c9c78c640740938d",
+            "id": "42a740dc3ed64565",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_posts/STM32学习记录/DAC输出库/DAC输出.md",
-                "mode": "source",
+                "file": "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "DAC输出"
+              "title": "使用HRTIM定时器生成PWM以及联动触发ADC"
             }
           }
         ]
@@ -183,28 +183,42 @@
       "bases:新建数据库": false
     }
   },
-  "active": "c9c78c640740938d",
+  "active": "42a740dc3ed64565",
   "lastOpenFiles": [
-    "_posts/STM32学习记录/DAC输出库/DAC输出/屏幕截图 2026-05-31 161006.png",
-    "_posts/STM32学习记录/DAC输出库/DAC输出/屏幕截图 2026-05-31 163229.png",
-    "_posts/STM32学习记录/DAC输出库/DAC输出/Pasted image 20260531160421.png",
-    "未命名.canvas",
-    "_posts/STM32学习记录/DAC输出库/DAC输出.md",
-    "屏幕截图 2026-05-31 161051.png",
+    "屏幕截图 2026-07-21 190651.png",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC/屏幕截图 2026-07-21 190651.png",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030402.png",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030337.png",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030315.png",
+    "Pasted image 20260722025857.png",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030225.png",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030121.png",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030042.png",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722025950.png",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722025857.png",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC.md",
+    "_posts/USER/CIMC/2026 CIMC 工业嵌入式系统开发——软件架构设计说明书.md",
+    "_posts/USER/CIMC/CIMC工业嵌入式系统开发_工程架构与验证任务.md",
+    "_posts/USER/CIMC/录视频测试全流程事项清单.md",
     "未命名.base",
-    "Pasted image 20260531161133.png",
-    "_posts/STM32学习记录/DAC输出库/DAC输出/Pasted image 20260531155821.png",
+    "未命名.canvas",
+    "_posts/STM32学习记录/HRTIM定时器使用/使用HRTIM定时器生成PWM以及联动触发ADC",
+    "_posts/STM32学习记录/内部RTC/RTC.md",
+    "_posts/STM32学习记录/HRTIM定时器使用",
+    "_posts/STM32学习记录/未命名.md",
+    "未命名",
+    "_posts/USER/CIMC",
+    "_posts/USER",
+    "_posts/STM32学习记录/DAC输出库/DAC输出.md",
+    "_posts/STM32学习记录/内部RTC/RTC",
+    "_posts/STM32学习记录/内部RTC",
     "_posts/STM32学习记录/ADC库/ADC.md",
     "_posts/STM32学习记录/EEPROM(IIC)/EEPROM.md",
     "_posts/STM32学习记录/PWM输出库/PWM输出.md",
     "_posts/STM32学习记录/DAC输出库/DAC输出",
-    "未命名",
     "_posts/STM32学习记录/DAC输出库",
     "_posts/STM32学习记录/按键扫描库/按键扫描.md",
     "_posts/STM32学习记录/串口输出库/串口输出.md",
-    "_posts/STM32学习记录/串口输出库/image-1.png",
-    "_posts/STM32学习记录/按键扫描库/image.png",
-    "_posts/STM32学习记录/按键扫描库/image-1.png",
     "_posts/复习资料库/通信原理库/通信原理.md"
   ]
 }

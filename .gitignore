@@ -6,3 +6,7 @@ node_modules/
 public/
 .deploy*/
 _multiconfig.yml
+source/_posts/STM32学习记录/内部RTC/RTC.md
+source/_posts/USER/CIMC/2026 CIMC 工业嵌入式系统开发——软件架构设计说明书.md
+source/_posts/USER/CIMC/录视频测试全流程事项清单.md
+source/_posts/USER/CIMC/CIMC工业嵌入式系统开发_工程架构与验证任务.md
