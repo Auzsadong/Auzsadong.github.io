@@ -1,3 +1,12 @@
+---
+title: "STM32开发备忘录：使用 HRTIM 定时器生成 PWM 并联动触发 ADC"
+date: 2026-07-22 16:30:00
+math: true
+categories:
+  - [嵌入式开发, STM32]
+tags: [DAC, HRTIM,TIM, DMA, 笔记, 嵌入式开发]
+---
+
 # 使用 HRTIM 定时器生成 PWM 并联动触发 ADC
 
 在数字电源、Boost/PFC、电机控制等功率电子场景里，经常需要在 PWM 的固定相位进行电压或电流采样。如果使用普通定时器中断再由软件启动 ADC，采样点会受到中断响应和代码执行时间影响。更稳妥的做法是让 HRTIM 同时产生 PWM 边沿和 ADC 触发事件：
