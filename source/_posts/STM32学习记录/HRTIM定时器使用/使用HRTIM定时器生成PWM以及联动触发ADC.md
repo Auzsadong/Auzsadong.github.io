@@ -154,7 +154,7 @@ HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
 ```
 
 这是 STM32G4 运行到 170 MHz 时需要的电源档位配置。
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/屏幕截图 2026-07-21 190651.png>)
+![alt text](<屏幕截图 2026-07-21 190651.png>)
 ### 3. 配置调试接口
 
 进入：
@@ -206,7 +206,7 @@ Analog -> ADC1
 | DMA Continuous Requests | Disabled |
 | Overrun | Data preserved |
 
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722025553.png>)
+![alt text](<Pasted image 20260722025553.png>)
 Regular Conversion 配置：
 
 | 参数                  | 配置             |
@@ -219,7 +219,7 @@ Regular Conversion 配置：
 |                     |                |
 
 注意：`2.5 cycles` 采样时间只适合信号源阻抗较低、前级运放驱动能力足够的情况。如果采样电阻分压或 RC 滤波阻抗较高，需要适当增大 Sampling Time，否则 ADC 采样电容可能充不满。
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722025705.png>)
+![alt text](<Pasted image 20260722025705.png>)
 
 ### 5. 开启 HRTIM1 的 Timer A PWM 输出
 
@@ -254,7 +254,7 @@ Timer A Time Base 配置：
 | Mode | Continuous |
 | Preload Enable | Enabled |
 
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722025857.png>)
+![alt text](<Pasted image 20260722025857.png>)
 
 ### 6. 配置 Timer A Compare
 
@@ -285,7 +285,7 @@ CMP1 = 17000 * 0.3 = 5100
 CMP4 = (5100 + 17000) / 2 = 11050
 ```
 
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722025950.png>)
+![alt text](<Pasted image 20260722025950.png>)
 
 ### 7. 配置 TA1 输出置位/复位源
 
@@ -304,7 +304,7 @@ CMP4 = (5100 + 17000) / 2 = 11050
 
 这样配置后，Timer A 每个周期开始时 TA1 输出高电平，到 CMP1 时输出低电平。
 
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030042.png>)
+![alt text](<Pasted image 20260722030042.png>)
 
 ### 8. 配置 HRTIM ADC Trigger 1
 
@@ -334,7 +334,7 @@ HAL_HRTIM_ADCPostScalerConfig(&hhrtim1, HRTIM_ADCTRIGGER_1, 0);
 
 这一步是整个联动关系的核心：CMP4 事件不输出到 GPIO，而是在芯片内部送到 ADC 触发矩阵。
 
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030121.png>)
+![alt text](<Pasted image 20260722030121.png>)
 
 ### 9. 配置 ADC 外部触发源
 
@@ -360,7 +360,7 @@ hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
 hadc1.Init.ContinuousConvMode = DISABLE;
 ```
 
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030225.png>)
+![alt text](<Pasted image 20260722030225.png>)
 ### 10. 配置 Timer B 调试标记输出
 
 如果需要用示波器确认 ADC 触发点，可以额外配置 Timer B 和 TB2。当前工程已经配置 PA11 为：
@@ -378,7 +378,7 @@ Timer B 基础配置：
 | Up Down Mode | Up-counting |
 | Mode | Continuous |
 | Reset Trigger | Other 1 CMP4 |
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030315.png>)
+![alt text](<Pasted image 20260722030315.png>)
 
 Timer B Compare：
 
@@ -387,7 +387,7 @@ Timer B Compare：
 | CMP1 | `1` |
 | CMP2 | `200` |
 
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030337.png>)
+![alt text](<Pasted image 20260722030337.png>)
 
 TB2 输出配置：
 
@@ -398,7 +398,7 @@ TB2 输出配置：
 
 其效果是：Timer A CMP4 发生时复位 Timer B；Timer B 随后从 0 开始计数，在 CMP1 置高，在 CMP2 拉低，于是 PA11 输出一个位于 ADC 触发点附近的窄脉冲。这个脉冲便于观察，不参与 ADC 触发本身。
 
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/Pasted image 20260722030402.png>)
+![alt text](<Pasted image 20260722030402.png>)
 
 ### 11. 配置 GPIO 和串口调试
 
@@ -1235,7 +1235,7 @@ build/Debug/G474_HETIM_ADC.elf
 7. 改变 PA0 输入电压，串口 ADC 数值应随之变化。
 
 
-![alt text](<使用HRTIM定时器生成PWM以及联动触发ADC/cf0ab5e50b381fe6fb36af5306f6d133.jpg>)
+![alt text](<cf0ab5e50b381fe6fb36af5306f6d133.jpg>)
 
 
 ## 九、常见问题
