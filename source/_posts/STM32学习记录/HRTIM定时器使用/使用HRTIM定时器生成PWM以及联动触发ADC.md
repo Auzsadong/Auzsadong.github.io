@@ -378,6 +378,7 @@ Timer B 基础配置：
 | Up Down Mode | Up-counting |
 | Mode | Continuous |
 | Reset Trigger | Other 1 CMP4 |
+
 ![alt text](<Pasted image 20260722030315.png>)
 
 Timer B Compare：
