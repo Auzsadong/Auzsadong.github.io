@@ -254,7 +254,7 @@ Timer A Time Base 配置：
 | Mode | Continuous |
 | Preload Enable | Enabled |
 
-![alt text](<Pasted image 20260722025857.png>)
+![alt text](Pasted_image_20260722025857.png)
 
 ### 6. 配置 Timer A Compare
 
